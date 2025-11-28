@@ -5,6 +5,65 @@
     <link rel="stylesheet" href="Project.css">
 </head>
 <body>
+        <nav class="navbar">
+        <div class="navbar-left">
+            <a href="#">Home</a>
+            <a href="#">About Us</a>
+            <a href="#">Catalog</a>
+        </div>
+        <div class="navbar-right">
+            <div class="dropdown" id="navbarDropdown">
+                <button class="dropdown-toggle" id="dropdownMenuButton">
+                    Menu &#x25BC;
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a href="#">Profile</a>
+                    <a href="#">Settings</a>
+                    <a href="#">Help</a>
+                    <a href="#">Sign Out</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="main-content">
+        <div class="Box" id="animatedBox">
+            <h1 class="Text">GPU</h1>
+        </div>
+    </div>
+    <script>
+        const box = document.getElementById('animatedBox');
+        document.addEventListener('mousemove', (e) => {
+            const percentX = e.clientX / window.innerWidth - 0.5;
+            const percentY = e.clientY / window.innerHeight - 0.5;
+            const moveX = percentX * 24;
+            const moveY = percentY * 24;
+            box.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        });
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            box.style.boxShadow = `0 ${4 + (scrollY/30)}px ${18 + (scrollY/10)}px rgba(0,0,0,0.22)`;
+        });
+        const dropdown = document.getElementById('navbarDropdown');
+        const dropdownBtn = dropdown.querySelector('.dropdown-toggle');
+        const dropdownMenu = dropdown.querySelector('.dropdown-menu');
+        let dropdownOpen = false;
+
+        dropdownBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdownOpen = !dropdownOpen;
+            dropdown.classList.toggle('open', dropdownOpen);
+        });
+
+        document.addEventListener('click', function() {
+            if (dropdownOpen) {
+                dropdownOpen = false;
+                dropdown.classList.remove('open');
+            }
+        });
+        dropdownMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    </script>
     
 </body>
 </html>
