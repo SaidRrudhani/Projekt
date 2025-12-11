@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>About Us</title>
+    <link rel="stylesheet" href="Project.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="Homepage.html">Home</a>
+            <a href="AboutUs.html">About Us</a>
+            <a href="#">Catalog</a>
+        </div>
+        <div class="navbar-right">
+            <div class="dropdown" id="navbarDropdown">
+                <button class="dropdown-toggle" id="dropdownMenuButton">
+                    Menu &#x25BC;
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a href="#">Profile</a>
+                    <a href="#">Settings</a>
+                    <a href="Help.html">Help</a>
+                    <a href="#">Analytics</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="main-content">
+        <div class="about-page-container">
+            <div class="about-page-header">
+                <h1>About Us</h1>
+            </div>
+            <div class="about-content">
+                <div class="about-section">
+                    <h2>Our Mission</h2>
+                    <p>We are dedicated to providing comprehensive information and resources about computer components, helping users understand the essential parts that make their systems work. Our goal is to make technology accessible and understandable for everyone, from beginners to enthusiasts.</p>
+                </div>
+                
+                <div class="about-section">
+                    <h2>What We Do</h2>
+                    <p>Our platform offers detailed information about key computer components including:</p>
+                    <ul>
+                        <li><strong>GPUs (Graphics Processing Units):</strong> Learn about graphics cards and their role in rendering visuals</li>
+                        <li><strong>CPUs (Central Processing Units):</strong> Understand how processors power your computer</li>
+                        <li><strong>RAM (Random Access Memory):</strong> Discover how memory affects system performance</li>
+                    </ul>
+                    <p>We provide clear explanations and practical insights to help you make informed decisions about your computer hardware.</p>
+                </div>
+                
+                <div class="about-section">
+                    <h2>Our Values</h2>
+                    <div class="values-list">
+                        <div class="value-item">
+                            <h3>Education First</h3>
+                            <p>We believe in making complex technology concepts easy to understand for everyone.</p>
+                        </div>
+                        <div class="value-item">
+                            <h3>Accuracy</h3>
+                            <p>We strive to provide accurate and up-to-date information about computer components.</p>
+                        </div>
+                        <div class="value-item">
+                            <h3>User Focus</h3>
+                            <p>Your needs and questions drive everything we do. We're here to help you succeed.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="about-section">
+                    <h2>Why Choose Us</h2>
+                    <p>Whether you're building your first computer, upgrading your system, or simply curious about how things work, we provide the resources and information you need. Our platform is designed to be user-friendly and accessible, with clear explanations and helpful guides.</p>
+                    <p>We understand that technology can be overwhelming, and we're here to make it simpler. From basic explanations to detailed technical information, we cover everything you need to know about computer components.</p>
+                </div>
+                
+                <div class="about-section">
+                    <h2>Get in Touch</h2>
+                    <p>Have questions or suggestions? We'd love to hear from you! Explore our Help section for more information, or browse through our resources to learn more about computer components.</p>
+                    <p>Thank you for visiting our platform. We hope you find the information you're looking for!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const dropdown = document.getElementById('navbarDropdown');
+        const dropdownBtn = dropdown.querySelector('.dropdown-toggle');
+        const dropdownMenu = dropdown.querySelector('.dropdown-menu');
+        let dropdownOpen = false;
+
+        dropdownBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdownOpen = !dropdownOpen;
+            dropdown.classList.toggle('open', dropdownOpen);
+        });
+
+        document.addEventListener('click', function() {
+            if (dropdownOpen) {
+                dropdownOpen = false;
+                dropdown.classList.remove('open');
+            }
+        });
+        dropdownMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    </script>
+</body>
+</html>
+
