@@ -16,7 +16,7 @@
                 <button class="dropdown-toggle" id="dropdownMenuButton">
                     Menu &#x25BC;
                 </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <div class="dropdown-menu">
                     <a href="#">Profile</a>
                     <a href="#">Settings</a>
                     <a href="Help.html">Help</a>
@@ -60,6 +60,8 @@
         </div>
     </div>
     <script>
+        const boxes = document.querySelectorAll('.Box');
+
         window.addEventListener('scroll', () => {
             const scrollY = window.scrollY;
             box.style.boxShadow = `0 ${4 + (scrollY/30)}px ${18 + (scrollY/10)}px rgba(0,0,0,0.22)`;
