@@ -1,90 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Catalog</title>
+    <title>Home Page</title>
     <link rel="stylesheet" href="Project.css">
 </head>
 <body>
-        <nav class="navbar">
-        <div class="navbar-left">
-            <a href="#">Home</a>
-            <a href="AboutUs.html">About Us</a>
-            <a href="#">Catalog</a>
-        </div>
-        <div class="navbar-right">
-            <div class="dropdown" id="navbarDropdown">
-                <button class="dropdown-toggle" id="dropdownMenuButton">
-                    Menu &#x25BC;
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a href="#">Profile</a>
-                    <a href="#">Settings</a>
-                    <a href="Help.html">Help</a>
-                    <a href="#">Analytics</a>
-                </div>
-            </div>
-        </div>
-    </nav>
-    <div class="main-content">
-        <div class="Box-row">
-            <div class="Box-wrapper">
-                <div class="Box" id="Box1" title="GPU"></div>
-                <div class="info-box">
-                    <p class="box-description">
-                        <strong>GPU</strong> &mdash; The GPU (Graphics Processing Unit) is responsible for drawing images, videos and animations on your screen.
-                        It takes over heavy visual work from the CPU so games, 3D applications and video editing run smoothly.
-                        A stronger GPU means higher frame rates, better image quality and support for higher resolutions.
-                    </p>
-                </div>
-            </div>
-            <div class="Box-wrapper">
-                <div class="Box" id="Box2" title="CPU"></div>
-                <div class="info-box">
-                    <p class="box-description">
-                        <strong>CPU</strong> &mdash; The CPU (Central Processing Unit) is the “brain” of the computer that processes instructions and calculations.
-                        It coordinates all other components and decides how quickly programs open and respond.
-                        More powerful CPUs can handle multitasking better and speed up tasks like coding, browsing and office work.
-                    </p>
-                </div>
-            </div>
-            <div class="Box-wrapper">
-                <div class="Box" id="Box3" title="RAM"></div>
-                <div class="info-box">
-                    <p class="box-description">
-                        <strong>RAM</strong> &mdash; RAM (Random Access Memory) is fast temporary memory that stores data your computer is currently using.
-                        More RAM lets you keep more programs and browser tabs open without slowing the system down.
-                        It helps the CPU access information quickly so applications feel smooth and responsive.
-                    </p>
-                </div>
+
+    <div class="main-content centered-content">
+        <div class="welcome-box">
+            <h1 class="welcome-title">Welcome to the Home Page</h1>
+            <p class="welcome-desc">
+                Explore our Catalog and learn more <br> 
+                about us using the buttons below.
+            </p>
+            <div class="welcome-links">
+                <a href="Homepage.html" class="welcome-btn home-btn">Home</a>
+                <a href="AboutUs.html" class="welcome-btn about-btn">About Us</a>
+                <a href="Catalog.html" class="welcome-btn catalog-btn">Catalog</a>
             </div>
         </div>
     </div>
-    <script>
-        window.addEventListener('scroll', () => {
-            const scrollY = window.scrollY;
-            box.style.boxShadow = `0 ${4 + (scrollY/30)}px ${18 + (scrollY/10)}px rgba(0,0,0,0.22)`;
-        });
-        const dropdown = document.getElementById('navbarDropdown');
-        const dropdownBtn = dropdown.querySelector('.dropdown-toggle');
-        const dropdownMenu = dropdown.querySelector('.dropdown-menu');
-        let dropdownOpen = false;
-
-        dropdownBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            dropdownOpen = !dropdownOpen;
-            dropdown.classList.toggle('open', dropdownOpen);
-        });
-
-        document.addEventListener('click', function() {
-            if (dropdownOpen) {
-                dropdownOpen = false;
-                dropdown.classList.remove('open');
-            }
-        });
-        dropdownMenu.addEventListener('click', function(e) {
-            e.stopPropagation();
-        });
-    </script>
-    
 </body>
 </html>

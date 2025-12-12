@@ -190,6 +190,55 @@ body {
     margin: 0;
     text-align: center;
 }
+
+.centered-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 85vh;
+}
+.welcome-box {
+    text-align: center;
+    background: rgba(28,36,54,0.70);
+    padding: 48px 32px;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.16);
+}
+.welcome-title {
+    color: #FAFAFA;
+    font-family: 'Times New Roman', Times, serif;
+    margin-bottom: 18px;
+}
+.welcome-desc {
+    color: #e0eafb;
+    font-size: 1.25rem;
+    margin-bottom: 32px;
+}
+.welcome-links {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+}
+.welcome-btn {
+    color: #152331;
+    padding: 11px 30px;
+    border-radius: 6px;
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    transition: background 0.18s;
+    display: inline-block;
+}
+.home-btn {
+    background: #ffa651;
+}
+.about-btn {
+    background: #24c7c9;
+}
+.catalog-btn {
+    background: #fb924b;
+}
+
 @media (max-width:1100px){
     .Box-row{
         flex-wrap: wrap;
