@@ -31,9 +31,9 @@
                 <div class="Box" id="Box1" title="GPU"></div>
                 <div class="info-box">
                     <p class="box-description">
-                        <strong>GPU</strong> &mdash; The GPU (Graphics Processing Unit) is responsible for drawing images, videos and animations on your screen.
-                        It takes over heavy visual work from the CPU so games, 3D applications and video editing run smoothly.
-                        A stronger GPU means higher frame rates, better image quality and support for higher resolutions.
+                        <strong>GPU</strong> &mdash; The GPU (Graphics Processing Unit) quite like the CPU also handles a type of processing but in the case of 
+                        the gpu it handles images and video outputs lightening the load on the CPU, higher end GPU's give better performance for different
+                        subjects such as:Games,Multitasking heavy applications,etc.
                     </p>
                 </div>
             </div>
@@ -42,8 +42,8 @@
                 <div class="info-box">
                     <p class="box-description">
                         <strong>CPU</strong> &mdash; The CPU (Central Processing Unit) is the “brain” of the computer that processes instructions and calculations.
-                        It coordinates all other components and decides how quickly programs open and respond.
-                        More powerful CPUs can handle multitasking better and speed up tasks like coding, browsing and office work.
+                        It coordinates all other components and dictates how they each handle certain workloads,for a small size chip the CPU is the main
+                        reason why a computer can do any tasks at all.
                     </p>
                 </div>
             </div>
@@ -52,8 +52,8 @@
                 <div class="info-box">
                     <p class="box-description">
                         <strong>RAM</strong> &mdash; RAM (Random Access Memory) is fast temporary memory that stores data your computer is currently using.
-                        More RAM lets you keep more programs and browser tabs open without slowing the system down.
-                        It helps the CPU access information quickly so applications feel smooth and responsive.
+                        The idea of this storage lets the computer work on more subjects while not slowing down, practically it means that the computer
+                        multitasks without losing performance,however the performance of the RAM is closely related to the CPU.
                     </p>
                 </div>
             </div>
@@ -62,10 +62,14 @@
     <script>
         const boxes = document.querySelectorAll('.Box');
 
+
         window.addEventListener('scroll', () => {
             const scrollY = window.scrollY;
-            box.style.boxShadow = `0 ${4 + (scrollY/30)}px ${18 + (scrollY/10)}px rgba(0,0,0,0.22)`;
+            boxes.forEach(box => {
+                box.style.boxShadow = `0 ${4 + (scrollY/30)}px ${18 + (scrollY/10)}px rgba(0,0,0,0.22)`;
+            });
         });
+
         const dropdown = document.getElementById('navbarDropdown');
         const dropdownBtn = dropdown.querySelector('.dropdown-toggle');
         const dropdownMenu = dropdown.querySelector('.dropdown-menu');
