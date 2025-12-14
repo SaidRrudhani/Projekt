@@ -66,7 +66,7 @@
         window.addEventListener('scroll', () => {
             const scrollY = window.scrollY;
             boxes.forEach(box => {
-                box.style.boxShadow = `0 ${4 + (scrollY/30)}px ${18 + (scrollY/10)}px rgba(0,0,0,0.22)`;
+                boxes.style.boxShadow = `0 ${4 + (scrollY/30)}px ${18 + (scrollY/10)}px rgba(0,0,0,0.22)`;
             });
         });
 
