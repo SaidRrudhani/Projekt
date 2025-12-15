@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="Login.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="Homepage.html">Home</a>
+            <a href="AboutUs.html">About Us</a>
+            <a href="Catalog.html">Catalog</a>
+        </div>
+        <div class="navbar-right">
+            <div class="dropdown" id="navbarDropdown">
+                <button class="dropdown-toggle" id="dropdownMenuButton">
+                    Menu &#x25BC;
+                </button>
+                <div class="dropdown-menu" id="navbarDropdownMenu">
+                    <a href="Sign up page.html">Profile</a>
+                    <a href="#">Settings</a>
+                    <a href="Help.html">Help</a>
+                    <a href="#">Analytics</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div id="loginRoot">
+      <div class="signup-container-outer" id="signupContainerOuter">
+        <div class="signup-container" id="signupContainer">
+            <h2>Login</h2>
+            <form id="loginForm" autocomplete="off" novalidate>
+                <label>Email:</label><br>
+                <input type="email" id="email" name="email" required />
+                <div class="error-msg" id="email-error"></div>
+                <label>Password:</label><br>
+                <input type="password" id="password" name="password" required />
+                <div class="error-msg" id="password-error"></div>
+                <button type="submit"></a> Login</button>
+            </form>
+            <div class="output" id="output"></div>
+            <div class="login-link-container">
+                No account? | <a href="Sign up page.html" id="signup-link">Sign Up</a>
+            </div>
+        </div>
+      </div>
+    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var dropdown = document.getElementById('navbarDropdown');
+        var button = document.getElementById('dropdownMenuButton');
+        // Handle dropdown open/close using .open class (matches CSS)
+        document.addEventListener('click', function(e) {
+            if (button && button.contains(e.target)) {
+                dropdown.classList.toggle('open');
+            } else if (!dropdown.contains(e.target)) {
+                dropdown.classList.remove('open');
+            }
+        });
+        window.addEventListener('resize', function() {
+            dropdown.classList.remove('open');
+        });
+
+        var borderDiv = document.getElementById('signupContainerOuter');
+        var deg = 0;
+        function doSpin() {
+            deg = (deg + 1) % 360;
+            if (borderDiv) borderDiv.style.setProperty('--rotate', deg + 'deg');
+            requestAnimationFrame(doSpin);
+        }
+        if (borderDiv) { requestAnimationFrame(doSpin); }
+    });
+
+    function validateEmail(val) {
+        return /^[a-zA-Z0-9._%+-]+@example\.com$/.test(val);
+    }
+    function validatePassword(val) {
+        return /[A-Z]/.test(val) && /\d/.test(val);
+    }
+
+    (function setUpLoginLogic() {
+        const fields = ['email', 'password'];
+        function setError(id, msg) {
+            document.getElementById(id+'-error').textContent = msg;
+        }
+        function clearError(id) {
+            document.getElementById(id+'-error').textContent = "";
+        }
+        fields.forEach(function(field) {
+            var el = document.getElementById(field);
+            if(el) {
+                el.addEventListener('input', function() {
+                    clearError(field);
+                });
+            }
+        });
+
+        document.getElementById('loginForm').onsubmit = function(e) {
+            e.preventDefault();
+            var valid = true;
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+
+            if(email === "" || email.trim() === "") { setError('email',""); valid = false; }
+            else if(!validateEmail(email)) { setError('email', 'Email must be of the form user@example.com'); valid = false; }
+            else clearError('email');
+            
+            if(password === "" || password.trim() === "") { setError('password',""); valid = false; }
+            else if(!validatePassword(password)) { setError('password', 'Password must have an uppercase letter and a number'); valid = false; }
+            else clearError('password');
+
+            if(!valid) {
+                var out = document.getElementById('output');
+                out.innerHTML = "";
+                out.style.display = "none";
+                return false;
+            }
+            var out = document.getElementById('output');
+            out.innerHTML = "";
+            out.style.display = "none";
+
+            return false;
+        }
+    })();
+    </script>
+</body>
+</html>
