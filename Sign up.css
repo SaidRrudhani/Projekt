@@ -15,7 +15,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #232d3b;
+            background: rgba(22, 28, 42, 0.86);
             color: #F0FFFF;
             height: 56px;
             width: 100%;
@@ -27,22 +27,25 @@
             top: 0;
             left: 0;
             right: 0;
-            z-index: 10;
-            box-shadow: 0 2px 14px 0 rgba(0,32,65,0.06),0 0 0 1px #151b26;
+            z-index: 100;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.13);
         }
         .navbar-left a, .navbar-right, .dropdown-menu{
             color: #F0FFFF;
             text-decoration: none;
             margin-right: 28px;
             font-weight: 700;
-            font-size: 1rem;
+            font-size: 1.09rem;
             transition: color 0.2s;
+            border-radius: 6px;
+            transition:background 0.16s;
+            outline: none;
         }
         .navbar-left a:last-child {
             margin-right: 0;
         }
         .navbar-left a:hover {
-            color: #f6c453;
+             background: rgba(255,255,255,0.13);
         }
         .navbar-right {
             position: relative;
@@ -60,9 +63,9 @@
             font: inherit;
             cursor: pointer;
             font-weight: 700;
-            font-size: 1rem;
+            font-size: 1.09rem;
             padding: 8px 18px;
-            margin-right: -45px;
+            margin-right: -40px;
         }
         .dropdown-toggle:focus {
             outline: none;
@@ -71,9 +74,9 @@
             display: none;
             position: absolute;
             top: calc(100% + 8px);
-            right: 0;
+            right: -55px;
             left: auto;
-            background: #24324b;
+            background: rgba(30, 30, 30, 0.95);
             min-width: 180px;
             max-width: min(92vw, 270px);
             border-radius: 8px;
@@ -90,7 +93,7 @@
         .dropdown-menu a {
             display: block;
             text-decoration: none;
-            padding: 11px 24px;
+            padding: 12px 22px;
             color: #F0FFFF;
             font-size: 1rem;
             transition: background 0.25s, color 0.25s;
@@ -99,7 +102,11 @@
             text-overflow: ellipsis;
         }
         .dropdown-menu a:hover {
-            background: #2e4780;
+            background: #437e99;
+            color: #e6fafd;
+        }
+        .dropdown.open .dropdown-menu {
+        display: block;
         }
         @media (max-width: 500px) {
             .navbar {

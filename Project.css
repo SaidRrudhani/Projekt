@@ -209,6 +209,7 @@ body {
     color: #FAFAFA;
     font-family: 'Times New Roman', Times, serif;
     margin-bottom: 18px;
+    font-style: italic;
 }
 .welcome-desc {
     color: #e0eafb;
@@ -230,7 +231,7 @@ body {
     transition: background 0.18s;
     display: inline-block;
 }
-.home-btn {
+.Help-btn {
     background: #ffa651;
 }
 .about-btn {
