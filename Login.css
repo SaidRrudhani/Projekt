@@ -209,7 +209,7 @@
         }
         .output {
             word-break: break-word;
-            font-size: 1.01em;
+            font-size: 1.09em;
             display: none;
         }
         .login-link-container {
@@ -260,3 +260,25 @@
                 padding: 7vw 1vw 9vw 1vw;
             }
         }
+      #loginForm input,
+      #loginForm select {
+        max-width: 100%;
+        width: 320px;
+        box-sizing: border-box;
+        display: block;
+      }
+      #loginForm .error-msg {
+        min-height: 1.2em;
+        color: #d00;
+        margin-bottom: 8px;
+        width: 320px;
+        max-width: 100%;
+        white-space: pre-line;
+      }
+      @media (max-width:420px){
+        #loginform input,
+        #loginform select,
+        #loginfrom .error-msg{
+            width: 100%;
+        }
+      }

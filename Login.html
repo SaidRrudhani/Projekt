@@ -103,11 +103,11 @@
             var email = document.getElementById('email').value;
             var password = document.getElementById('password').value;
 
-            if(email === "" || email.trim() === "") { setError('email',""); valid = false; }
+          if(email === "" || email.trim() === "") { setError('email','Email is required'); valid = false; }
             else if(!validateEmail(email)) { setError('email', 'Email must be of the form user@example.com'); valid = false; }
             else clearError('email');
-            
-            if(password === "" || password.trim() === "") { setError('password',""); valid = false; }
+
+            if(password === "" || password.trim() === "") { setError('password','Password is required'); valid = false; }
             else if(!validatePassword(password)) { setError('password', 'Password must have an uppercase letter and a number'); valid = false; }
             else clearError('password');
 
