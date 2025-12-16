@@ -179,30 +179,30 @@
             var phonenumber = document.getElementById('phonenumber').value;
             var gender = document.getElementById('gender').value;
 
-            if(email === "" || email.trim() === "") { setError('email',""); valid = false; }
+            if(email === "" || email.trim() === "") { setError('email','Email is required'); valid = false; }
             else if(!validateEmail(email)) { setError('email', 'Email must be of the form user@example.com'); valid = false; }
             else clearError('email');
-            
-            if(password === "" || password.trim() === "") { setError('password',""); valid = false; }
+
+            if(password === "" || password.trim() === "") { setError('password','Password is required'); valid = false; }
             else if(!validatePassword(password)) { setError('password', 'Password must have an uppercase letter and a number'); valid = false; }
             else clearError('password');
-            
-            if((confirmpassword === "" && password === "") || (confirmpassword === "" || password === "")) { setError('confirmpassword',""); valid = false; }
+
+            if(confirmpassword === "" || confirmpassword.trim() === "") { setError('confirmpassword','Please confirm password'); valid = false; }
             else if(password !== confirmpassword) { setError('confirmpassword', 'Passwords do not match'); valid = false; }
             else clearError('confirmpassword');
-            
-            if(name === "" || name.trim() === "") { setError('name',""); valid = false; }
+
+            if(name === "" || name.trim() === "") { setError('name','Name is required'); valid = false; }
             else if(!validateName(name)) { setError('name', 'Name must be at least 3 characters long'); valid = false; }
             else clearError('name');
-            
-            if(surname === "" || surname.trim() === "") { setError('surname',""); valid = false; }
+
+            if(surname === "" || surname.trim() === "") { setError('surname','Surname is required'); valid = false; }
             else clearError('surname');
-            
-            if(phonenumber === "" || phonenumber.trim() === "") { setError('phonenumber', ""); valid = false;}
+
+            if(phonenumber === "" || phonenumber.trim() === "") { setError('phonenumber', "Phone number is required"); valid = false;}
             else if(!validatePhone(phonenumber)) { setError('phonenumber', 'Phone must be 10 digits'); valid = false;}
             else clearError('phonenumber');
-            
-            if(gender === "") { setError('gender',""); valid=false; }
+
+            if(gender === "") { setError('gender','Gender is required'); valid=false; }
             else if(!validateGender(gender)) { setError('gender', 'Please select a gender'); valid=false; }
             else clearError('gender');
 

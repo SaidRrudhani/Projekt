@@ -265,3 +265,25 @@
                 padding: 16vw 1vw 12vw 1vw;
             }
         }
+              #signupForm input,
+      #signupForm select {
+        max-width: 100%;
+        width: 320px;
+        box-sizing: border-box;
+        display: block;
+      }
+      #signupForm .error-msg {
+        min-height: 1.2em;
+        color: #d00;
+        margin-bottom: 8px;
+        width: 320px;
+        max-width: 100%;
+        white-space: pre-line;
+      }
+      @media (max-width:420px){
+        #signupform input,
+        #signupform select,
+        #signupfrom .error-msg{
+            width: 100%;
+        }
+      }
