@@ -362,7 +362,38 @@ body {
     padding-left: 25px;
     color: #f4f8fa;
 }
-
+        .more-coming-soon-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 36px;
+            margin-bottom: 40px;
+        }
+        .more-coming-soon {
+            width: calc(3 * 250px + 48px); 
+            max-width: 98vw;
+            min-height: 90px;
+            border: 5px solid;
+            border-radius: 18px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            font-size: 2rem;
+            color: #e0eafb;
+            background: rgba(28,36,54,0.8);
+            margin: 0;
+            transition: border-color 0.2s;
+            text-shadow: 0 2px 14px rgba(0,0,0,0.28);
+        }
+        @media (max-width: 600px) {
+            .more-coming-soon {
+                width: 98vw;
+                font-size: 1.25rem;
+                min-height: 66px;
+            }
+        }
 .help-section li {
     margin-bottom: 8px;
 }
