@@ -68,7 +68,6 @@
                 const moreComingSoon = document.getElementById('moreComingSoon');
         let hue = 0;
         function animateBorder() {
-            // 4-side gradient border using conic-gradient for dynamic effect
             hue = (hue + 1) % 360;
             const borderColor = `conic-gradient(
                 hsl(${hue},90%,58%),
@@ -80,14 +79,12 @@
             moreComingSoon.style.borderImage = `${borderColor} 1`;
             requestAnimationFrame(animateBorder);
         }
-        // Use fallback for browsers not supporting borderImage with conic-gradient
         function animateSimpleBorder() {
             hue = (hue + 2) % 360;
             const color = `hsl(${hue}, 90%, 58%)`;
             moreComingSoon.style.borderColor = color;
             requestAnimationFrame(animateSimpleBorder);
         }
-        // Feature detect conic-gradient support for border-image
         const test = document.createElement('div');
         test.style.borderImage = 'conic-gradient(red, yellow) 1';
         if (test.style.borderImage && CSS.supports('border-image', 'conic-gradient(red, yellow) 1')) {
