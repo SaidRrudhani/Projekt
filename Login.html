@@ -38,7 +38,7 @@
                 <label>Password:</label><br>
                 <input type="password" id="password" name="password" required />
                 <div class="error-msg" id="password-error"></div>
-                <button type="submit"></a> Login</button>
+                <button type="submit">Login</button>
             </form>
             <div class="output" id="output"></div>
             <div class="login-link-container">
@@ -74,10 +74,10 @@
     });
 
     function validateEmail(val) {
-        return /^[a-zA-Z0-9._%+-]+@example\.com$/.test(val);
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
     }
     function validatePassword(val) {
-        return /[A-Z]/.test(val) && /\d/.test(val);
+    return val.length >= 8 && /[A-Z]/.test(val) && /\d/.test(val);
     }
 
     (function setUpLoginLogic() {
@@ -108,7 +108,7 @@
             else clearError('email');
 
             if(password === "" || password.trim() === "") { setError('password','Password is required'); valid = false; }
-            else if(!validatePassword(password)) { setError('password', 'Password must have an uppercase letter and a number'); valid = false; }
+            else if(!validatePassword(password)) { setError('password', 'Password must have an uppercase letter and a number and must be 8 characters or more long'); valid = false; }
             else clearError('password');
 
             if(!valid) {

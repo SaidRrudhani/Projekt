@@ -127,10 +127,10 @@
     });
         
     function validateEmail(val) {
-        return /^[a-zA-Z0-9._%+-]+@example\.com$/.test(val);
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
     }
     function validatePassword(val) {
-        return /[A-Z]/.test(val) && /\d/.test(val);
+    return val.length >= 8 && /[A-Z]/.test(val) && /\d/.test(val);
     }
     function validateName(val) {
         return val.length >= 3;
@@ -184,7 +184,7 @@
             else clearError('email');
 
             if(password === "" || password.trim() === "") { setError('password','Password is required'); valid = false; }
-            else if(!validatePassword(password)) { setError('password', 'Password must have an uppercase letter and a number'); valid = false; }
+            else if(!validatePassword(password)) { setError('password', 'Password must have an uppercase letter and a number and must be 8 or more characters long'); valid = false; }
             else clearError('password');
 
             if(confirmpassword === "" || confirmpassword.trim() === "") { setError('confirmpassword','Please confirm password'); valid = false; }
