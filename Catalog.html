@@ -31,9 +31,8 @@
                 <div class="Box" id="Box1" title="GPU"></div>
                 <div class="info-box">
                     <p class="box-description">
-                        <strong>GPU</strong> &mdash; The GPU (Graphics Processing Unit) quite like the CPU also handles a type of processing but in the case of 
-                        the gpu it handles images and video outputs lightening the load on the CPU, higher end GPU's give better performance for different
-                        subjects such as:Games,Multitasking heavy applications,etc.
+                        <strong>GPU</strong> &mdash;The GPU is dedicated to rendering images, video, and animations. By handling visual workloads separately from the CPU, 
+                        it delivers smoother graphics performance and faster rendering.High‑end GPUs are essential for gaming, video editing, and other demanding applications where speed and clarity matter.
                     </p>
                 </div>
             </div>
@@ -41,9 +40,9 @@
                 <div class="Box" id="Box2" title="CPU"></div>
                 <div class="info-box">
                     <p class="box-description">
-                        <strong>CPU</strong> &mdash; The CPU (Central Processing Unit) is the “brain” of the computer that processes instructions and calculations.
-                        It coordinates all other components and dictates how they each handle certain workloads,for a small size chip the CPU is the main
-                        reason why a computer can do any tasks at all.More modern CPU are singeled out by multithreding technology.
+                        <strong>CPU</strong> &mdash;Often called the “brain” of the computer, the CPU executes instructions and manages system operations. 
+                        Modern processors feature multiple cores and advanced multithreading, allowing them to handle complex tasks efficiently. 
+                        A powerful CPU ensures responsive performance across everyday computing and professional workloads.
                     </p>
                 </div>
             </div>
@@ -51,9 +50,10 @@
                 <div class="Box" id="Box3" title="RAM"></div>
                 <div class="info-box">
                     <p class="box-description">
-                        <strong>RAM</strong> &mdash; RAM (Random Access Memory) is fast temporary memory that stores data your computer is currently using.
-                        The idea of this storage lets the computer work on more subjects while not slowing down, practically it means that the computer
-                        multitasks without losing performance,however the performance of the RAM is closely related to the CPU.
+                        <strong>RAM</strong> &mdash;RAM provides fast, temporary storage for data that the CPU is actively using. 
+                        More RAM allows a system to multitask smoothly, keeping applications responsive without slowing down. 
+                        While it works closely with the CPU, RAM capacity and speed are critical for overall system performance.
+                        Such aspects are improved upon by the DDR5 version.
                     </p>
                 </div>
             </div>
@@ -65,7 +65,7 @@
     <script>
         const boxes = document.querySelectorAll('.Box');
 
-                const moreComingSoon = document.getElementById('moreComingSoon');
+        const moreComingSoon = document.getElementById('moreComingSoon');
         let hue = 0;
         function animateBorder() {
             hue = (hue + 1) % 360;
@@ -96,7 +96,7 @@
         window.addEventListener('scroll', () => {
             const scrollY = window.scrollY;
             boxes.forEach(box => {
-                boxes.style.boxShadow = `0 ${4 + (scrollY/30)}px ${18 + (scrollY/10)}px rgba(0,0,0,0.22)`;
+                box.style.boxShadow = `0 ${4 + (scrollY/30)}px ${18 + (scrollY/10)}px rgba(0,0,0,0.22)`;
             });
         });
 
