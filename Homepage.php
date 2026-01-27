@@ -17,9 +17,9 @@
                 about us using the buttons below.
             </p>
             <div class="welcome-links">
-                <a href="Help.html" class="welcome-btn Help-btn">Help</a>
-                <a href="AboutUs.html" class="welcome-btn about-btn">About Us</a>
-                <a href="Catalog.html" class="welcome-btn catalog-btn">Catalog</a>
+                <a href="Help.php" class="welcome-btn Help-btn">Help</a>
+                <a href="AboutUs.php" class="welcome-btn about-btn">About Us</a>
+                <a href="Catalog.php" class="welcome-btn catalog-btn">Catalog</a>
             </div>
         </div>
     </div>

@@ -11,9 +11,10 @@
 <body>
         <nav class="navbar">
         <div class="navbar-left">
-            <a href="Homepage.html">Home</a>
-            <a href="AboutUs.html">About Us</a>
-            <a href="Catalog.html">Catalog</a>
+            <a href="Homepage.php">Home</a>
+            <a href="AboutUs.php">About Us</a>
+            <a href="Catalog.php">Catalog</a>
+            <a href="Dashboard.php">Dashboard</a>
         </div>
         <div class="navbar-right">
             <div class="dropdown" id="navbarDropdown">
@@ -21,10 +22,10 @@
                     Menu &#x25BC;
                 </button>
                 <div class="dropdown-menu">
-                    <a href="Sign up page.html">Profile</a>
+                    <a href="Sign up page.php">Profile</a>
                     <a href="#">Settings</a>
-                    <a href="Help.html">Help</a>
-                    <a href="Analytics.html">Analytics</a>
+                    <a href="Help.php">Help</a>
+                    <a href="Analytics.php">Analytics</a>
                 </div>
             </div>
         </div>
