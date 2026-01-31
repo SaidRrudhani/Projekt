@@ -76,7 +76,7 @@
             </form>
     <div class="output" id="output"></div>
         <div class="login-link-container">
-        Already signed up? | <a href="Login.html" id="login-link">Login</a>
+        Already signed up? | <a href="Login.php" id="login-link">Login</a>
             </div>
         </div>
       </div>

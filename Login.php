@@ -47,7 +47,7 @@
             </form>
             <div class="output" id="output"></div>
             <div class="login-link-container">
-                No account? | <a href="Sign up page.html" id="signup-link">Sign Up</a>
+                No account? | <a href="Sign up page.php" id="signup-link">Sign Up</a>
             </div>
         </div>
       </div>
@@ -56,7 +56,6 @@
     document.addEventListener('DOMContentLoaded', function() {
         var dropdown = document.getElementById('navbarDropdown');
         var button = document.getElementById('dropdownMenuButton');
-        // Handle dropdown open/close using .open class (matches CSS)
         document.addEventListener('click', function(e) {
             if (button && button.contains(e.target)) {
                 dropdown.classList.toggle('open');
