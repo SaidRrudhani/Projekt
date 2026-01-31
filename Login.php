@@ -1,4 +1,23 @@
 <?php
+    session_start();
+    include_once 'Database.php';
+    include_once 'User.php';
+
+    if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email']) && isset($_POST['password'])) {
+        $db = new Database();
+        $connection = $db->getConnection();
+        $user = new User($connection);
+
+        $Email = $_POST['email'];
+        $Password = $_POST['password'];
+
+        if($user->login($Email, $Password)){
+            header("Location: Catalog.php");
+            exit();
+        } else {
+            echo "Login failed. Please check your credentials.";
+        }
+    }
 ?>
 
 
@@ -36,7 +55,7 @@
       <div class="signup-container-outer" id="signupContainerOuter">
         <div class="signup-container" id="signupContainer">
             <h2>Login</h2>
-            <form id="loginForm" autocomplete="off" novalidate>
+            <form id="loginForm" method="POST" autocomplete="off" novalidate>
                 <label>Email:</label><br>
                 <input type="email" id="email" name="email" required />
                 <div class="error-msg" id="email-error"></div>
@@ -126,7 +145,9 @@
             out.innerHTML = "";
             out.style.display = "none";
 
-            return false;
+            // Allow form submission
+            e.target.submit();
+            return true;
         }
     })();
     </script>
