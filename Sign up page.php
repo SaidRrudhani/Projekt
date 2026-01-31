@@ -1,4 +1,25 @@
 <?php
+    session_start();
+    include_once 'Database.php';
+    include_once 'User.php';
+
+    if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['name'])) {
+        $db = new Database();
+        $connection = $db->getConnection();
+        $user = new User($connection);
+
+        $Fullname = $_POST['name'];
+        $Email = $_POST['email'];
+        $Password = $_POST['password'];
+
+
+        if($user->register($Fullname, $Email, $Password)){
+            header("Location: Login.php");
+            exit();
+        } else {
+            echo "Registration failed. Please try again.";
+        }    
+    }
 ?>
 
 
@@ -16,7 +37,9 @@
             <a href="Homepage.php">Home</a>
             <a href="AboutUs.php">About Us</a>
             <a href="Catalog.php">Catalog</a>
-            <a href="Dashboard.php">Dashboard</a>
+            <?php if(isset($_SESSION['Role']) && $_SESSION['Role'] == 1): ?>
+                <a href="Dashboard.php">Dashboard</a>
+            <?php endif; ?>
         </div>
         <div class="navbar-right">
             <div class="dropdown" id="navbarDropdown">
@@ -28,6 +51,9 @@
                     <a href="#">Settings</a>
                     <a href="Help.php">Help</a>
                     <a href="Analytics.php">Analytics</a>
+                    <?php if(isset($_SESSION['user_id'])): ?>
+                        <a href="Logout.php">Logout</a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -37,7 +63,7 @@
       <div class="signup-container-outer" id="signupContainerOuter">
         <div class="signup-container" id="signupContainer">
             <h2>Sign Up</h2>
-            <form id="signupForm" autocomplete="off" novalidate>
+            <form id="signupForm" method="POST" autocomplete="off" novalidate>
 
                 <label>Email:</label><br>
                 <input type="email" id="email" name="email" required />
@@ -47,31 +73,9 @@
                 <input type="password" id="password" name="password" required />
                 <div class="error-msg" id="password-error"></div>
 
-                <label>Confirm Password:</label><br>
-                <input type="password" id="confirmpassword" name="confirmpassword" required />
-                <div class="error-msg" id="confirmpassword-error"></div>
-
-                <label>Name:</label><br>
+                <label>Fullname:</label><br>
                 <input type="text" id="name" name="name" required />
                 <div class="error-msg" id="name-error"></div>
-
-                <label>Surname:</label><br>
-                <input type="text" id="surname" name="surname" required />
-                <div class="error-msg" id="surname-error"></div>
-
-                <label>Phone Number:</label><br>
-                <input type="tel" id="phonenumber" name="phonenumber" required maxlength="10"/>
-                <div class="error-msg" id="phonenumber-error"></div>
-
-                <label>Gender:</label><br>
-                <select id="gender" name="gender" required>
-                    <option value="">Select gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="nonbinary">Non-binary</option>
-                    <option value="other">Other</option>
-                </select>
-                <div class="error-msg" id="gender-error"></div>
                 <button type="submit">Sign Up</button>
             </form>
     <div class="output" id="output"></div>
@@ -137,14 +141,8 @@
     function validatePassword(val) {
     return val.length >= 8 && /[A-Z]/.test(val) && /\d/.test(val);
     }
-    function validateName(val) {
+    function validateFullname(val) {
         return val.length >= 3;
-    }
-    function validatePhone(val) {
-        return /^\d{10}$/.test(val);
-    }
-    function validateGender(val) {
-        return val !== "";
     }
     function capitalize(str) {
         if (!str) return '';
@@ -153,7 +151,7 @@
 
        (function setUpSignupLogic() {
         const fields = [
-            'email', 'password', 'confirmpassword', 'name', 'surname', 'phonenumber', 'gender'
+            'email', 'password', 'name',
         ];
         function setError(id, msg) {
             document.getElementById(id+'-error').textContent = msg;
@@ -178,11 +176,7 @@
             var valid = true;
             var email = document.getElementById('email').value;
             var password = document.getElementById('password').value;
-            var confirmpassword = document.getElementById('confirmpassword').value;
             var name = document.getElementById('name').value;
-            var surname = document.getElementById('surname').value;
-            var phonenumber = document.getElementById('phonenumber').value;
-            var gender = document.getElementById('gender').value;
 
             if(email === "" || email.trim() === "") { setError('email','Email is required'); valid = false; }
             else if(!validateEmail(email)) { setError('email', 'Email must be of the form user@example.com'); valid = false; }
@@ -192,24 +186,9 @@
             else if(!validatePassword(password)) { setError('password', 'Password must have an uppercase letter and a number and must be 8 or more characters long'); valid = false; }
             else clearError('password');
 
-            if(confirmpassword === "" || confirmpassword.trim() === "") { setError('confirmpassword','Please confirm password'); valid = false; }
-            else if(password !== confirmpassword) { setError('confirmpassword', 'Passwords do not match'); valid = false; }
-            else clearError('confirmpassword');
-
             if(name === "" || name.trim() === "") { setError('name','Name is required'); valid = false; }
-            else if(!validateName(name)) { setError('name', 'Name must be at least 3 characters long'); valid = false; }
+            else if(!validateFullname(name)) { setError('name', 'Name must be at least 3 characters long'); valid = false; }
             else clearError('name');
-
-            if(surname === "" || surname.trim() === "") { setError('surname','Surname is required'); valid = false; }
-            else clearError('surname');
-
-            if(phonenumber === "" || phonenumber.trim() === "") { setError('phonenumber', "Phone number is required"); valid = false;}
-            else if(!validatePhone(phonenumber)) { setError('phonenumber', 'Phone must be 10 digits'); valid = false;}
-            else clearError('phonenumber');
-
-            if(gender === "") { setError('gender','Gender is required'); valid=false; }
-            else if(!validateGender(gender)) { setError('gender', 'Please select a gender'); valid=false; }
-            else clearError('gender');
 
             if(!valid) {
                 var out = document.getElementById('output');
@@ -221,7 +200,9 @@
             out.innerHTML = "";
             out.style.display = "none";
 
-            return false;
+            // Allow form submission
+            e.target.submit();
+            return true;
         }
     })();
     </script>
