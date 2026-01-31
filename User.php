@@ -9,21 +9,29 @@ class User{
     }
 
     public function register($Fullname, $Email, $Password){
-        $query = "INSERT INTO {$this->table_name} {Fullname, Email, Password} VALUES (:Fullname, :Email, :Password)";
-        $stmt = $this->conn->prepare($query);
+        try {
+            $query = "INSERT INTO {$this->table_name} (Fullname, Email, Password, Role) VALUES (:Fullname, :Email, :Password, :Role)";
+            $stmt = $this->conn->prepare($query);
 
-        $stmt->bindParam(':Fullname', $Fullname);
-        $stmt->bindParam(':Email', $Email);
-        $stmt->bindParam(':Password', Password_hash($Password, PASSWORD_BCRYPT));
+            $stmt->bindParam(':Fullname', $Fullname);
+            $stmt->bindParam(':Email', $Email);
+            $stmt->bindParam(':Password', password_hash($Password, PASSWORD_BCRYPT));
+            
+            // Default Role to 0 (User)
+            $role = 0;
+            $stmt->bindParam(':Role', $role);
 
-        if($stmt->execute()){
-            return true;
+            if($stmt->execute()){
+                return true;
+            }
+            return false;
+        } catch (PDOException $e) {
+            return false;
         }
-        return false;
     }
 
     public function login($Email, $Password){
-        $query = "SELECT id,Fullname, Email, Password FROM {$this->table_name} WHERE Email = :Email";
+        $query = "SELECT id,Fullname, Email, Password, Role FROM {$this->table_name} WHERE Email = :Email";
         $stmt = $this->conn->prepare($query);
 
         $stmt->bindParam(':Email', $Email);
@@ -35,6 +43,7 @@ class User{
                 session_start();
                 $_SESSION['user_id'] = $row['id'];
                 $_SESSION['Email'] = $row['Email'];
+                $_SESSION['Role'] = $row['Role'];
                 return true;
             }
         }
