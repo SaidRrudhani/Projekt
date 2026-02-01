@@ -1,8 +1,10 @@
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
     height: 100%;
 }
+
 body {
     min-height: 100vh;
     background-image: url('Photos/vector-polygon-orange-teal-bg.avif');
@@ -14,6 +16,7 @@ body {
     width: 100vw;
     overflow-x: hidden;
 }
+
 .navbar {
     width: 100%;
     height: 56px;
@@ -21,18 +24,20 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.13);
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.13);
     position: fixed;
     top: 0;
     left: 0;
     z-index: 100;
 }
+
 .navbar-left {
     display: flex;
     align-items: center;
     gap: 32px;
     margin-left: 32px;
 }
+
 .navbar-left a {
     color: #F0FFFF;
     font-family: 'Times New Roman', Times, serif;
@@ -44,20 +49,24 @@ body {
     border-radius: 6px;
     transition: background 0.16s;
 }
+
 .navbar-left a:hover {
-    background: rgba(255,255,255,0.13);
+    background: rgba(255, 255, 255, 0.13);
 }
+
 .navbar-right {
     display: flex;
     align-items: center;
     margin-right: 32px;
     position: relative;
 }
+
 .dropdown {
     position: relative;
     margin-left: 16px;
     display: inline-block;
 }
+
 .dropdown-toggle {
     color: #F0FFFF;
     font-family: 'Times New Roman', Times, serif;
@@ -70,10 +79,13 @@ body {
     border-radius: 6px;
     transition: background 0.16s;
 }
-.dropdown-toggle:hover, .dropdown-toggle:focus {
-    background: rgba(255,255,255,0.13);
+
+.dropdown-toggle:hover,
+.dropdown-toggle:focus {
+    background: rgba(255, 255, 255, 0.13);
     outline: none;
 }
+
 .dropdown-menu {
     display: none;
     position: absolute;
@@ -82,10 +94,11 @@ body {
     min-width: 160px;
     background: rgba(30, 30, 30, 0.95);
     border-radius: 10px;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.14);
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.14);
     overflow: hidden;
     z-index: 200;
 }
+
 .dropdown-menu a {
     display: block;
     color: #f4f8fa;
@@ -96,23 +109,27 @@ body {
     font-family: 'Times New Roman', Times, serif;
     transition: background 0.14s, color 0.14s;
 }
+
 .dropdown-menu a:hover {
     background: #437e99;
     color: #e6fafd;
 }
+
 .dropdown.open .dropdown-menu {
     display: block;
 }
+
 .main-content {
     padding-top: 68px;
     display: flex;
-    flex-direction:column;
+    flex-direction: column;
     align-items: center;
     min-height: auto;
     justify-content: flex-start;
     width: 100%;
 }
-.Box-row{
+
+.Box-row {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -121,9 +138,10 @@ body {
     position: relative;
     margin-top: 0;
     width: 100%;
-    max-width:1290px;
+    max-width: 1290px;
 }
-.Box-wrapper{
+
+.Box-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -131,13 +149,14 @@ body {
     max-width: 430px;
     min-width: 220px;
 }
+
 .Box {
     position: relative;
     background:
-    url('Photos/AMD-GPU-history.webp') center center/cover no-repeat,
-    rgba(30, 30, 30, 0.78);
+        url('Photos/AMD-GPU-history.webp') center center/cover no-repeat,
+        rgba(30, 30, 30, 0.78);
     border-radius: 14px;
-    box-shadow: 0 4px 18px rgba(0,0,0,0.22);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
     padding: 48px 40px;
     width: 100%;
     max-width: 100%;
@@ -147,18 +166,20 @@ body {
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
-    transition: box-shadow 0.28s cubic-bezier(.24,.79,.28,.95), border-color 21s;
+    transition: box-shadow 0.28s cubic-bezier(.24, .79, .28, .95), border-color 21s;
 }
-.info-box{
+
+.info-box {
     margin-top: 10px;
     width: 100%;
     background: rgba(0, 0, 0, 0.82);
     border-radius: 10px;
     padding: 12px 14px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     box-sizing: border-box;
 }
-.box-description{
+
+.box-description {
     margin: 0;
     font-family: 'Times New Roman', Times, serif;
     color: #f4f8fa;
@@ -166,22 +187,27 @@ body {
     line-height: 1.5;
     text-align: left;
 }
-.Box:hover{
-     box-shadow: 
-     0 0 0 4px rgba(81, 202, 255, 0.15), 
-     0 0 12px 3px rgba(231,178,93,0.19), 
-     0 6px 28px rgba(51,229,229,0.11);
-     border: 2px solid rgba(226,236,225,0.38);
+
+.Box:hover {
+    box-shadow:
+        0 0 0 4px rgba(81, 202, 255, 0.15),
+        0 0 12px 3px rgba(231, 178, 93, 0.19),
+        0 6px 28px rgba(51, 229, 229, 0.11);
+    border: 2px solid rgba(226, 236, 225, 0.38);
 }
-#Box1{
+
+#Box1 {
     background-image: url(Photos/1678052-radeon-gpu-background-1920x1080_3_cropped-rotated.jpg);
 }
-#Box2{
+
+#Box2 {
     background-image: url(Photos/2613900-amd-ryzen-9000-desktop-og.avif);
 }
-#Box3{
+
+#Box3 {
     background-image: url(Photos/DDR5-RAM-and-Ryzen-Buyer-Beware-Twitter-1200x675.jpg);
 }
+
 .Text {
     font-family: 'Times New Roman', Times, serif;
     font-weight: bold;
@@ -198,67 +224,78 @@ body {
     align-items: center;
     min-height: 85vh;
 }
+
 .welcome-box {
     text-align: center;
-    background: rgba(28,36,54,0.70);
+    background: rgba(28, 36, 54, 0.70);
     padding: 48px 32px;
     border-radius: 16px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.16);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.16);
 }
+
 .welcome-title {
     color: #FAFAFA;
     font-family: 'Times New Roman', Times, serif;
     margin-bottom: 18px;
     font-style: italic;
 }
+
 .welcome-desc {
     color: #e0eafb;
     font-size: 1.25rem;
     margin-bottom: 32px;
 }
+
 .welcome-links {
     display: flex;
     gap: 18px;
     justify-content: center;
 }
+
 .welcome-btn {
     color: #152331;
     padding: 11px 30px;
     border-radius: 6px;
     font-weight: bold;
     text-decoration: none;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
     transition: background 0.18s;
     display: inline-block;
 }
+
 .Help-btn {
     background: #ffa651;
 }
+
 .about-btn {
     background: #24c7c9;
 }
+
 .catalog-btn {
     background: #fb924b;
 }
 
-@media (max-width:1100px){
-    .Box-row{
+@media (max-width:1100px) {
+    .Box-row {
         flex-wrap: wrap;
         gap: 4vw;
         justify-content: center;
     }
-    .Box-wrapper{
+
+    .Box-wrapper {
         max-width: 380px;
         min-width: 200px;
     }
 }
-@media (max-width:900px){
-    .main-content{
+
+@media (max-width:900px) {
+    .main-content {
         align-items: center;
         justify-content: flex-start;
         padding-top: 64px;
     }
-    .Box-row{
+
+    .Box-row {
         flex-direction: column;
         position: static;
         width: 100%;
@@ -270,37 +307,47 @@ body {
         padding: 0;
         margin-top: 0;
     }
-    .Box-wrapper{
+
+    .Box-wrapper {
         max-width: 90vw;
         min-width: 200px;
         width: 98vw;
     }
-    .Box{
+
+    .Box {
         width: 100%;
-        padding:24px 10px;
+        padding: 24px 10px;
     }
 }
+
 @media (max-width: 600px) {
-    .navbar-left, .navbar-right {
+
+    .navbar-left,
+    .navbar-right {
         margin-left: 12px;
         margin-right: 12px;
     }
-    .Box-row{
+
+    .Box-row {
         gap: 16px;
         justify-content: center;
     }
-    .Box-wrapper{
+
+    .Box-wrapper {
         max-width: 99vw;
         width: 100%;
     }
+
     .Box {
         padding: 18px 8px;
         width: 100%;
     }
-    .main-content{
+
+    .main-content {
         padding-top: 60px;
     }
 }
+
 .help-page-container {
     max-width: 900px;
     margin: 0 auto;
@@ -362,38 +409,42 @@ body {
     padding-left: 25px;
     color: #f4f8fa;
 }
-        .more-coming-soon-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 36px;
-            margin-bottom: 40px;
-        }
-        .more-coming-soon {
-            width: calc(3 * 250px + 48px); 
-            max-width: 98vw;
-            min-height: 90px;
-            border: 5px solid;
-            border-radius: 18px;
-            box-sizing: border-box;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Courier New', Courier, monospace;
-            font-weight: bold;
-            font-size: 2rem;
-            color: #e0eafb;
-            background: rgba(28,36,54,0.8);
-            margin: 0;
-            transition: border-color 0.2s;
-            text-shadow: 0 2px 14px rgba(0,0,0,0.28);
-        }
-        @media (max-width: 600px) {
-            .more-coming-soon {
-                width: 98vw;
-                font-size: 1.25rem;
-                min-height: 66px;
-            }
-        }
+
+.more-coming-soon-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 36px;
+    margin-bottom: 40px;
+}
+
+.more-coming-soon {
+    width: calc(3 * 250px + 48px);
+    max-width: 98vw;
+    min-height: 90px;
+    border: 5px solid;
+    border-radius: 18px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    font-size: 2rem;
+    color: #e0eafb;
+    background: rgba(28, 36, 54, 0.8);
+    margin: 0;
+    transition: border-color 0.2s;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.28);
+}
+
+@media (max-width: 600px) {
+    .more-coming-soon {
+        width: 98vw;
+        font-size: 1.25rem;
+        min-height: 66px;
+    }
+}
+
 .help-section li {
     margin-bottom: 8px;
 }
@@ -414,10 +465,12 @@ body {
     .help-content {
         padding: 20px;
     }
+
     .help-page-header h1 {
         font-size: 1.8rem;
     }
 }
+
 .about-div {
     max-width: 900px;
     margin: 0 auto;
@@ -520,10 +573,12 @@ body {
     .about-content {
         padding: 20px;
     }
+
     .about-page-header h1 {
         font-size: 1.8rem;
     }
 }
+
 .analytics-page-container {
     max-width: 900px;
     margin: 0 auto;
@@ -670,16 +725,20 @@ body {
     .analytics-content {
         padding: 20px;
     }
+
     .analytics-page-header h1 {
         font-size: 1.8rem;
     }
+
     .stats-grid {
         flex-direction: column;
     }
+
     .stat-box {
         max-width: 100%;
     }
 }
+
 .dashboard-page-container {
     max-width: 900px;
     margin: 0 auto;
@@ -772,6 +831,7 @@ body {
     .dashboard-content {
         padding: 20px;
     }
+
     .dashboard-page-header h1 {
         font-size: 1.8rem;
     }

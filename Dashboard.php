@@ -328,7 +328,7 @@
         
         dropdownBtn.addEventListener('click', function(e) {
             e.stopPropagation();
-            dropdown.classList.toggle('open'); // Corrected for Project.css
+            dropdown.classList.toggle('open'); 
         });
         window.onclick = function(event) {
             if (!event.target.matches('.dropdown-toggle') && !event.target.closest('.dropdown-menu')) {

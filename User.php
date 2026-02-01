@@ -26,7 +26,6 @@ class User {
             $stmt->bindParam(':Email', $Email);
             $stmt->bindParam(':Password', password_hash($Password, PASSWORD_BCRYPT));
             
-            // Default Role to 0 (User)
             $role = 0;
             $stmt->bindParam(':Role', $role);
 

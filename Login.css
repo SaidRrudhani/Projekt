@@ -1,8 +1,10 @@
-        html, body {
+        html,
+        body {
             margin: 0;
             padding: 0;
             height: 100%;
         }
+
         body {
             min-height: 100vh;
             background-image: url('Photos/vector-polygon-orange-teal-bg.avif');
@@ -16,6 +18,7 @@
             font-family: Arial, sans-serif;
             background-color: #f5f5f5;
         }
+
         .navbar {
             width: 100%;
             height: 56px;
@@ -23,19 +26,21 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 2px 16px rgba(0,0,0,0.13);
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.13);
             position: fixed;
             top: 0;
             left: 0;
             z-index: 100;
             letter-spacing: 0.01em;
         }
+
         .navbar-left {
             display: flex;
             align-items: center;
             gap: 32px;
             margin-left: 32px;
         }
+
         .navbar-left a {
             color: #F0FFFF;
             font-family: 'Times New Roman', Times, serif;
@@ -47,20 +52,24 @@
             border-radius: 6px;
             transition: background 0.16s;
         }
+
         .navbar-left a:hover {
-            background: rgba(255,255,255,0.13);
+            background: rgba(255, 255, 255, 0.13);
         }
+
         .navbar-right {
             display: flex;
             align-items: center;
             margin-right: 32px;
             position: relative;
         }
+
         .dropdown {
             position: relative;
             margin-left: 16px;
             display: inline-block;
         }
+
         .dropdown-toggle {
             color: #F0FFFF;
             font-family: 'Times New Roman', Times, serif;
@@ -73,10 +82,13 @@
             border-radius: 6px;
             transition: background 0.16s;
         }
-        .dropdown-toggle:hover, .dropdown-toggle:focus {
-            background: rgba(255,255,255,0.13);
+
+        .dropdown-toggle:hover,
+        .dropdown-toggle:focus {
+            background: rgba(255, 255, 255, 0.13);
             outline: none;
         }
+
         .dropdown-menu {
             display: none;
             position: absolute;
@@ -85,10 +97,11 @@
             min-width: 160px;
             background: rgba(30, 30, 30, 0.95);
             border-radius: 10px;
-            box-shadow: 0 2px 16px rgba(0,0,0,0.14);
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.14);
             overflow: hidden;
             z-index: 200;
         }
+
         .dropdown-menu a {
             display: block;
             color: #f4f8fa;
@@ -99,13 +112,16 @@
             font-family: 'Times New Roman', Times, serif;
             transition: background 0.14s, color 0.14s;
         }
+
         .dropdown-menu a:hover {
             background: #437e99;
             color: #e6fafd;
         }
+
         .dropdown.open .dropdown-menu {
             display: block;
         }
+
         .signup-container-outer {
             margin: clamp(68px, 7vw, 56px) auto 0 auto;
             width: 370px;
@@ -120,29 +136,26 @@
             border: 4px solid transparent;
             border-radius: 16px;
             background: #fff;
-            border-image: conic-gradient(
-                #5ad5e9,
-                #fca6ec,
-                #ffd6d6,
-                #b2fafa,
-                #ffe4b3,
-                #5ad5e9
-            ) 1;
+            border-image: conic-gradient(#5ad5e9,
+                    #fca6ec,
+                    #ffd6d6,
+                    #b2fafa,
+                    #ffe4b3,
+                    #5ad5e9) 1;
             transition: border-image-source 0.2s;
             box-sizing: border-box;
             --rotate: 0deg;
-            border-image-source: conic-gradient(
-                from var(--rotate),
-                #5ad5e9,
-                #fca6ec,
-                #ffd6d6,
-                #b2fafa,
-                #ffe4b3,
-                #5ad5e9
-            );
+            border-image-source: conic-gradient(from var(--rotate),
+                    #5ad5e9,
+                    #fca6ec,
+                    #ffd6d6,
+                    #b2fafa,
+                    #ffe4b3,
+                    #5ad5e9);
             animation: border-spin 6s linear infinite;
             overflow: visible;
         }
+
         .signup-container {
             width: 100%;
             padding: 36px 28px 36px 28px;
@@ -157,18 +170,21 @@
             box-sizing: border-box;
             overflow: visible;
         }
+
         @keyframes border-spin {
-          to {
-            --rotate: 360deg;
-          }
+            to {
+                --rotate: 360deg;
+            }
         }
+
         .signup-container h2 {
             margin-bottom: 12px;
             font-size: 1.85em;
             color: #272750;
             margin-top: 0;
         }
-        .signup-container input[type="text"], 
+
+        .signup-container input[type="text"],
         .signup-container input[type="password"],
         .signup-container input[type="email"] {
             width: 95%;
@@ -180,10 +196,12 @@
             font-size: 1em;
             transition: border-color 0.23s;
         }
+
         .signup-container input:focus {
             border-color: #a58cfa;
             outline: none;
         }
+
         .signup-container button {
             background: linear-gradient(90deg, #5ad5e9 0%, #fca6ec 100%);
             color: #fff;
@@ -197,55 +215,68 @@
             box-shadow: 0 2px 6px 0 #b8d8fe44;
             transition: background 0.19s, box-shadow 0.19s;
         }
+
         .signup-container button:hover {
             background: linear-gradient(90deg, #fca6ec 0%, #5ad5e9 100%);
             box-shadow: 0 2px 15px 0 #ac26a844;
         }
+
         .error-msg {
             color: #e74c3c;
             font-size: 0.95em;
             min-height: 1em;
             margin-bottom: 4px;
         }
+
         .output {
             word-break: break-word;
             font-size: 1.09em;
             display: none;
         }
+
         .login-link-container {
             margin-top: 28px;
             text-align: center;
             font-size: 0.99em;
             color: #666;
         }
+
         .login-link-container a {
             color: #3498db;
             text-decoration: none;
             margin-left: 2px;
             font-weight: 500;
         }
+
         .login-link-container a:hover {
             text-decoration: underline;
         }
+
         @media (max-width:900px) {
             .navbar-left {
                 gap: 16px;
                 margin-left: 8px;
             }
+
             .navbar-right {
                 margin-right: 8px;
             }
+
             .signup-container-outer {
                 margin-top: clamp(64px, 4vw, 44px);
                 width: 94vw;
                 max-width: 420px;
             }
         }
+
         @media (max-width: 600px) {
-            .navbar-left, .navbar-right {
+
+            .navbar-left,
+            .navbar-right {
                 margin-left: 12px;
                 margin-right: 12px;
             }
+
             .signup-container-outer {
                 width: 98vw;
                 min-width: unset;
@@ -253,6 +284,7 @@
                 margin-top: clamp(60px, 2vw, 28px);
                 padding: 0;
             }
+
             .signup-container {
                 width: 100%;
                 min-width: unset;
@@ -260,25 +292,29 @@
                 padding: 7vw 1vw 9vw 1vw;
             }
         }
-      #loginForm input,
-      #loginForm select {
-        max-width: 100%;
-        width: 320px;
-        box-sizing: border-box;
-        display: block;
-      }
-      #loginForm .error-msg {
-        min-height: 1.2em;
-        color: #d00;
-        margin-bottom: 8px;
-        width: 320px;
-        max-width: 100%;
-        white-space: pre-line;
-      }
-      @media (max-width:420px){
-        #loginform input,
-        #loginform select,
-        #loginfrom .error-msg{
-            width: 100%;
+
+        #loginForm input,
+        #loginForm select {
+            max-width: 100%;
+            width: 320px;
+            box-sizing: border-box;
+            display: block;
         }
-      }
+
+        #loginForm .error-msg {
+            min-height: 1.2em;
+            color: #d00;
+            margin-bottom: 8px;
+            width: 320px;
+            max-width: 100%;
+            white-space: pre-line;
+        }
+
+        @media (max-width:420px) {
+
+            #loginform input,
+            #loginform select,
+            #loginfrom .error-msg {
+                width: 100%;
+            }
+        }

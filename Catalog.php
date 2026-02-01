@@ -70,17 +70,15 @@
             <?php 
             if (count($products) > 0) {
                 foreach ($products as $product): 
-                    // Map new column names to UI
+
                     $pID = $product['ProductID'];
                     $pName = $product['ProductName'];
                     $pDesc = $product['description'] ?? 'No description available.';
                     $pImg = $product['image_path'] ?? '';
                     
-                    // Use ID Box1, Box2 etc for legacy cycling support if IDs match
                     $boxId = "Box" . $pID; 
             ?>
             <div class="Box-wrapper">
-                <!-- Apply background inline for dynamic images -->
                 <div class="Box" id="<?php echo $boxId; ?>" title="<?php echo htmlspecialchars($pName); ?>"
                      style="background-image: url('<?php echo htmlspecialchars($pImg); ?>'); background-size: cover; background-position: center;">
                 </div>
