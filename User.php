@@ -92,6 +92,7 @@ class User {
         return $stmt->execute();
     }
 
+    
     /**
      * @param int|string $id
      * @return bool
