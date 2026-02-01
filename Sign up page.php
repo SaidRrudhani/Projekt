@@ -57,7 +57,9 @@
                     Menu &#x25BC;
                 </button>
                 <div class="dropdown-menu" id="navbarDropdownMenu">
-                    <a href="Sign up page.php">Profile</a>
+                    <?php if(!isset($_SESSION['user_id'])): ?>
+                        <a href="Sign up page.php">Profile</a>
+                    <?php endif; ?>
                     <a href="#">Settings</a>
                     <a href="Help.php">Help</a>
                     <a href="Analytics.php">Analytics</a>

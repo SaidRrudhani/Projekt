@@ -1,30 +1,23 @@
 <?php
     session_start();
     include_once 'Database.php';
-
+    include_once 'User.php';
+    include_once 'Product.php';
+    
+    $db = new Database();
+    $conn = $db->getConnection();
+    $userModel = new User($conn);
+    $productModel = new Product($conn);
+    
     if (!isset($_SESSION['user_id'])) {
         header("Location: Login.php");
         exit();
     }
-    
-    // Auth & Force Logout Check
-    $db = new Database();
-    $conn = $db->getConnection();
-    
-    try {
-        $stmt = $conn->prepare("SELECT force_logout FROM user WHERE id = :id");
-        $stmt->bindParam(':id', $_SESSION['user_id']);
-        $stmt->execute();
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($user && $user['force_logout'] == 1) {
-            session_destroy();
-            header("Location: Login.php?msg=kicked");
-            exit();
-        }
-    } catch (PDOException $e) {
-        // Column 'force_logout' likely doesn't exist yet. 
-        // Ignore error to allow page to load, but feature won't work.
+    if ($userModel->isKicked($_SESSION['user_id'])) {
+        session_destroy();
+        header("Location: Login.php?msg=kicked");
+        exit();
     }
 
     if (!isset($_SERVER['HTTP_REFERER']) || stripos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) === false) {
@@ -33,13 +26,7 @@
     }
 
     // Fetch Products
-    // Using 'product' table now (ProductID, ProductName, Quantity, Nr, description, image_path)
-    try {
-        $productsQuery = $conn->query("SELECT * FROM product ORDER BY created_at ASC");
-        $products = $productsQuery ? $productsQuery->fetchAll(PDO::FETCH_ASSOC) : [];
-    } catch (PDOException $e) {
-        $products = [];
-    }
+    $products = $productModel->getAll();
 ?>
 
 
@@ -65,7 +52,9 @@
                     Menu &#x25BC;
                 </button>
                 <div class="dropdown-menu">
-                    <a href="Sign up page.php">Profile</a>
+                    <?php if(!isset($_SESSION['user_id'])): ?>
+                        <a href="Sign up page.php">Profile</a>
+                    <?php endif; ?>
                     <a href="#">Settings</a>
                     <a href="Help.php">Help</a>
                     <a href="Analytics.php">Analytics</a>

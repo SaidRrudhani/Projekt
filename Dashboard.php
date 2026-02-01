@@ -1,7 +1,14 @@
 <?php
     session_start();
     include_once 'Database.php';
+    include_once 'User.php';
+    include_once 'Product.php';
 
+
+    if (!isset($_SESSION['user_id'])) {
+        header("Location: Login.php");
+        exit();
+    }
 
     if (!isset($_SESSION['Role']) || $_SESSION['Role'] != 1) {
         header("Location: Catalog.php");
@@ -9,56 +16,46 @@
     }
 
     if (!isset($_SERVER['HTTP_REFERER']) || stripos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) === false) {
+        header("Location: Homepage.php");
+        exit();
     }
 
     $db = new Database();
     $conn = $db->getConnection();
+    $userModel = new User($conn);
+    $productModel = new Product($conn);
     $message = '';
 
+    // --- ACTIONS ---
+
+    // Delete User
     if (isset($_POST['delete_user'])) {
-        try {
-            $userId = $_POST['user_id'];
-            $stmt = $conn->prepare("DELETE FROM user WHERE id = :id AND Role != 1"); 
-            $stmt->bindParam(':id', $userId);
-            if ($stmt->execute()) {
-                $message = "User deleted successfully.";
-            } else {
-                $message = "Error deleting user.";
-            }
-        } catch (Exception $e) {
-            $message = "Error: " . $e->getMessage();
+        if ($userModel->deleteUser($_POST['user_id'])) {
+            $message = "User deleted successfully.";
+        } else {
+            $message = "Error deleting user.";
         }
     }
 
+    // Kick User (Force Logout)
     if (isset($_POST['kick_user'])) {
-        try {
-            $userId = $_POST['user_id'];
-            $stmt = $conn->prepare("UPDATE user SET force_logout = 1 WHERE id = :id");
-            $stmt->bindParam(':id', $userId);
-            if ($stmt->execute()) {
-                $message = "User has been signed out (will take effect on their next page load).";
-            }
-        } catch (Exception $e) {
-             $message = "Error (Schema likely needs update): " . $e->getMessage();
+        if ($userModel->kickUser($_POST['user_id'])) {
+            $message = "User has been signed out (will take effect on their next page load).";
+        } else {
+            $message = "Error kicking user.";
         }
     }
 
+    // Delete Product
     if (isset($_POST['delete_product'])) {
-        try {
-            $pID = $_POST['product_id'];
-            $stmt = $conn->prepare("DELETE FROM product WHERE ProductID = :id");
-            $stmt->bindParam(':id', $pID);
-            if ($stmt->execute()) {
-                $message = "Product deleted successfully.";
-            } else {
-                $message = "Error deleting product.";
-            }
-        } catch (Exception $e) {
-            $message = "Error: " . $e->getMessage();
+        if ($productModel->delete($_POST['product_id'])) {
+            $message = "Product deleted successfully.";
+        } else {
+            $message = "Error deleting product.";
         }
     }
 
-
+    // Add Product
     if (isset($_POST['add_product'])) {
         try {
             $title = $_POST['item_title'];
@@ -71,14 +68,7 @@
                 $targetPath = $uploadDir . $fileName; 
                 
                 if (move_uploaded_file($_FILES['item_image']['tmp_name'], $targetPath)) {
-        
-                    $stmt = $conn->prepare("INSERT INTO product (ProductName, description, image_path, Quantity, Nr) VALUES (:title, :desc, :img, :qty, 0)");
-                    $stmt->bindParam(':title', $title);
-                    $stmt->bindParam(':desc', $description);
-                    $stmt->bindParam(':img', $targetPath);
-                    $stmt->bindParam(':qty', $quantity);
-                    
-                    if ($stmt->execute()) {
+                    if ($productModel->add($title, $description, $targetPath, $quantity)) {
                         $message = "Product added successfully!";
                     } else {
                         $message = "Database error adding product.";
@@ -90,72 +80,42 @@
                 $message = "Please list an image.";
             }
         } catch (Exception $e) {
-            $message = "Error (Schema likely needs update): " . $e->getMessage();
+            $message = "Error: " . $e->getMessage();
         }
     }
 
 
-    try {
-        $totalUsers = $conn->query("SELECT COUNT(*) FROM user")->fetchColumn();
-    } catch (Exception $e) { $totalUsers = 0; }
-
-    try {
-        $totalProducts = $conn->query("SELECT COUNT(*) FROM product")->fetchColumn();
-    } catch (Exception $e) { $totalProducts = 0; }
+    // Stats
+    $totalUsers = $conn->query("SELECT COUNT(*) FROM user")->fetchColumn();
+    $totalProducts = $productModel->getCount();
     
- 
-    $users = [];
-    try {
-        $usersQuery = $conn->query("SELECT id, Fullname, Email, Role, created_at FROM user ORDER BY created_at DESC");
-        if ($usersQuery) $users = $usersQuery->fetchAll(PDO::FETCH_ASSOC);
-    } catch (Exception $e) {
-        $message = "Error fetching users: " . $e->getMessage();
-    }
+    // Users List
+    $users = $userModel->getAllUsers();
 
-    $allProducts = [];
-    try {
-        $allProducts = $conn->query("SELECT * FROM product ORDER BY created_at DESC")->fetchAll(PDO::FETCH_ASSOC);
-    } catch (Exception $e) {
-        $allProducts = [];
-    }
+    // Products List for Management
+    $allProducts = $productModel->getAll();
 
+    // Edit Product Handling
     $editProduct = null;
     if (isset($_GET['edit_product_id'])) {
-        $stmt = $conn->prepare("SELECT * FROM product WHERE ProductID = :id");
-        $stmt->execute(['id' => $_GET['edit_product_id']]);
-        $editProduct = $stmt->fetch(PDO::FETCH_ASSOC);
+        $editProduct = $productModel->getById($_GET['edit_product_id']);
     }
 
-
+    // Update Product Logic
     if (isset($_POST['update_product'])) {
         try {
-            $pID = $_POST['product_id'];
-            $title = $_POST['item_title'];
-            $description = $_POST['item_description'];
-            $quantity = (int)$_POST['item_quantity'];
-            
-            $imgSql = "";
-            $params = [
-                'title' => $title,
-                'desc' => $description,
-                'qty' => $quantity,
-                'id' => $pID
-            ];
-
+            $targetPath = null;
             if (isset($_FILES['item_image']) && $_FILES['item_image']['error'] == 0) {
                 $uploadDir = 'Photos/';
                 $fileName = basename($_FILES['item_image']['name']);
                 $targetPath = $uploadDir . $fileName; 
-                if (move_uploaded_file($_FILES['item_image']['tmp_name'], $targetPath)) {
-                    $imgSql = ", image_path = :img";
-                    $params['img'] = $targetPath;
+                if (!move_uploaded_file($_FILES['item_image']['tmp_name'], $targetPath)) {
+                    $targetPath = null;
                 }
             }
 
-            $stmt = $conn->prepare("UPDATE product SET ProductName = :title, description = :desc, Quantity = :qty $imgSql WHERE ProductID = :id");
-            if ($stmt->execute($params)) {
-                $message = "Product updated successfully!";
-                header("Location: Dashboard.php?msg=updated"); // Redirect to clear POST
+            if ($productModel->update($_POST['product_id'], $_POST['item_title'], $_POST['item_description'], $_POST['item_quantity'], $targetPath)) {
+                header("Location: Dashboard.php?msg=updated");
                 exit();
             }
         } catch (Exception $e) {

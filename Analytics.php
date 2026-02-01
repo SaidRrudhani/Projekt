@@ -1,9 +1,23 @@
 <?php
     session_start();
+    include_once 'Database.php';
+    include_once 'User.php';
+    
+    $db = new Database();
+    $conn = $db->getConnection();
+    $userModel = new User($conn);
+
     if (!isset($_SESSION['user_id'])) {
         header("Location: Login.php");
         exit();
     }
+
+    if ($userModel->isKicked($_SESSION['user_id'])) {
+        session_destroy();
+        header("Location: Login.php?msg=kicked");
+        exit();
+    }
+    
     if (!isset($_SERVER['HTTP_REFERER']) || stripos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) === false) {
         header("Location: Homepage.php");
         exit();
@@ -33,7 +47,9 @@
                     Menu &#x25BC;
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a href="Sign up page.php">Profile</a>
+                    <?php if(!isset($_SESSION['user_id'])): ?>
+                        <a href="Sign up page.php">Profile</a>
+                    <?php endif; ?>
                     <a href="#">Settings</a>
                     <a href="Help.php">Help</a>
                     <a href="Analytics.php">Analytics</a>

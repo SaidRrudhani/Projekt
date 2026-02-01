@@ -9,6 +9,7 @@
     }
 
 
+    $login_result = null;
     if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email']) && isset($_POST['password'])) {
         $db = new Database();
         $connection = $db->getConnection();
@@ -17,7 +18,8 @@
         $Email = $_POST['email'];
         $Password = $_POST['password'];
 
-        if($user->login($Email, $Password)){
+        $login_result = $user->login($Email, $Password);
+        if($login_result === true){
             // Remember Me Logic
             if (isset($_POST['remember_me'])) {
                 setcookie('remember_email', $Email, time() + (86400 * 30), "/"); // 30 days
@@ -28,8 +30,6 @@
             }
             header("Location: Catalog.php");
             exit();
-        } else {
-            echo "Login failed. Please check your credentials.";
         }
     }
 ?>
@@ -59,7 +59,9 @@
                     Menu &#x25BC;
                 </button>
                 <div class="dropdown-menu" id="navbarDropdownMenu">
-                    <a href="Sign up page.php">Profile</a>
+                    <?php if(!isset($_SESSION['user_id'])): ?>
+                        <a href="Sign up page.php">Profile</a>
+                    <?php endif; ?>
                     <a href="#">Settings</a>
                     <a href="Help.php">Help</a>
                     <a href="Analytics.php">Analytics</a>
@@ -77,10 +79,10 @@
             <form id="loginForm" method="POST" autocomplete="off" novalidate>
                 <label>Email:</label><br>
                 <input type="email" id="email" name="email" value="<?php echo isset($_COOKIE['remember_email']) ? htmlspecialchars($_COOKIE['remember_email']) : ''; ?>" required />
-                <div class="error-msg" id="email-error"></div>
+                <div class="error-msg" id="email-error"><?php echo ($login_result === "email_not_found") ? "Your email is incorrect" : ""; ?></div>
                 <label>Password:</label><br>
                 <input type="password" id="password" name="password" required />
-                <div class="error-msg" id="password-error"></div>
+                <div class="error-msg" id="password-error"><?php echo ($login_result === "incorrect_password") ? "Your password is incorrect" : ""; ?></div>
                 
                 <div style="margin-bottom: 15px; text-align: left; width: 320px; max-width: 100%;">
                     <input type="checkbox" id="remember_me" name="remember_me" style="width: auto; display: inline-block; margin: 0 10px 0 0;">
