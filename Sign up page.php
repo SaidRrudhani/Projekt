@@ -220,11 +220,11 @@
             out.innerHTML = "";
             out.style.display = "none";
 
-            // Allow form submission
             e.target.submit();
             return true;
         }
     })();
     </script>
+    
 </body>
 </html>

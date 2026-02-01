@@ -60,4 +60,5 @@ class Product {
         return $this->conn->query($query)->fetchColumn();
     }
 }
+
 ?>

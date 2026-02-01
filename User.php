@@ -108,5 +108,6 @@ class User {
             return false;
         }
     }
+    
 }
 ?>

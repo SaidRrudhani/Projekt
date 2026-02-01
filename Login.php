@@ -22,7 +22,7 @@
         if($login_result === true){
             // Remember Me Logic
             if (isset($_POST['remember_me'])) {
-                setcookie('remember_email', $Email, time() + (86400 * 30), "/"); // 30 days
+                setcookie('remember_email', $Email, time() + (86400 * 30), "/"); 
             } else {
                 if (isset($_COOKIE['remember_email'])) {
                     setcookie('remember_email', '', time() - 3600, "/");
@@ -30,6 +30,7 @@
             }
             header("Location: Catalog.php");
             exit();
+
         }
     }
 ?>
@@ -133,6 +134,7 @@
     function validatePassword(val) {
     return val.length >= 8 && /[A-Z]/.test(val) && /\d/.test(val);
     }
+    
 
     (function setUpLoginLogic() {
         const fields = ['email', 'password'];

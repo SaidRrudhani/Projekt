@@ -25,7 +25,7 @@
         exit();
     }
 
-    // Fetch Products
+
     $products = $productModel->getAll();
 ?>
 
@@ -91,10 +91,7 @@
             </div>
             <?php endforeach; 
             } else {
-                echo "<div style='color:white; text-align:center; width:100%; margin-top:20px;'>
-                        <p>No products found.</p>
-                        <p style='font-size:0.9em; color:#aaa;'>Please run <strong>update_schema.php</strong> to sync the database.</p>
-                      </div>";
+                echo " No products found ";
             }
             ?>
         </div>
@@ -220,6 +217,7 @@
             }
         });
     </script>
+
     
 </body>
 </html>
