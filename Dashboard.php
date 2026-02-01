@@ -1,63 +1,172 @@
 <?php
     session_start();
+    include_once 'Database.php';
+
+
     if (!isset($_SESSION['Role']) || $_SESSION['Role'] != 1) {
-        header("Location: Catalog.php"); // Or Homepage.php
+        header("Location: Catalog.php");
         exit();
     }
+
     if (!isset($_SERVER['HTTP_REFERER']) || stripos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) === false) {
-        header("Location: Homepage.php");
-        exit();
     }
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_catalog_item'])) {
-    $title = $_POST['item_title'] ?? '';
-    $description = $_POST['item_description'] ?? '';
+
+    $db = new Database();
+    $conn = $db->getConnection();
     $message = '';
-    
-    if (!empty($title) && !empty($description) && isset($_FILES['item_image'])) {
-        $uploadDir = 'Photos/';
-        $fileName = $_FILES['item_image']['name'];
-        $fileTmp = $_FILES['item_image']['tmp_name'];
-        $fileError = $_FILES['item_image']['error'];
-        
-        if ($fileError === UPLOAD_ERR_OK) {
-            $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-            $allowedExts = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'avif'];
+
+    if (isset($_POST['delete_user'])) {
+        try {
+            $userId = $_POST['user_id'];
+            $stmt = $conn->prepare("DELETE FROM user WHERE id = :id AND Role != 1"); 
+            $stmt->bindParam(':id', $userId);
+            if ($stmt->execute()) {
+                $message = "User deleted successfully.";
+            } else {
+                $message = "Error deleting user.";
+            }
+        } catch (Exception $e) {
+            $message = "Error: " . $e->getMessage();
+        }
+    }
+
+    if (isset($_POST['kick_user'])) {
+        try {
+            $userId = $_POST['user_id'];
+            $stmt = $conn->prepare("UPDATE user SET force_logout = 1 WHERE id = :id");
+            $stmt->bindParam(':id', $userId);
+            if ($stmt->execute()) {
+                $message = "User has been signed out (will take effect on their next page load).";
+            }
+        } catch (Exception $e) {
+             $message = "Error (Schema likely needs update): " . $e->getMessage();
+        }
+    }
+
+    if (isset($_POST['delete_product'])) {
+        try {
+            $pID = $_POST['product_id'];
+            $stmt = $conn->prepare("DELETE FROM product WHERE ProductID = :id");
+            $stmt->bindParam(':id', $pID);
+            if ($stmt->execute()) {
+                $message = "Product deleted successfully.";
+            } else {
+                $message = "Error deleting product.";
+            }
+        } catch (Exception $e) {
+            $message = "Error: " . $e->getMessage();
+        }
+    }
+
+
+    if (isset($_POST['add_product'])) {
+        try {
+            $title = $_POST['item_title'];
+            $description = $_POST['item_description'];
+            $quantity = isset($_POST['item_quantity']) ? (int)$_POST['item_quantity'] : 1;
             
-            if (in_array($fileExt, $allowedExts)) {
-                $newFileName = uniqid('catalog_', true) . '.' . $fileExt;
-                $uploadPath = $uploadDir . $newFileName;
+            if (isset($_FILES['item_image']) && $_FILES['item_image']['error'] == 0) {
+                $uploadDir = 'Photos/';
+                $fileName = basename($_FILES['item_image']['name']);
+                $targetPath = $uploadDir . $fileName; 
                 
-                if (move_uploaded_file($fileTmp, $uploadPath)) {
-                    $catalogFile = 'catalog_items.json';
-                    $items = [];
+                if (move_uploaded_file($_FILES['item_image']['tmp_name'], $targetPath)) {
+        
+                    $stmt = $conn->prepare("INSERT INTO product (ProductName, description, image_path, Quantity, Nr) VALUES (:title, :desc, :img, :qty, 0)");
+                    $stmt->bindParam(':title', $title);
+                    $stmt->bindParam(':desc', $description);
+                    $stmt->bindParam(':img', $targetPath);
+                    $stmt->bindParam(':qty', $quantity);
                     
-                    if (file_exists($catalogFile)) {
-                        $items = json_decode(file_get_contents($catalogFile), true) ?: [];
+                    if ($stmt->execute()) {
+                        $message = "Product added successfully!";
+                    } else {
+                        $message = "Database error adding product.";
                     }
-                    
-                    $items[] = [
-                        'id' => uniqid(),
-                        'title' => $title,
-                        'description' => $description,
-                        'image' => $uploadPath,
-                        'date' => date('Y-m-d H:i:s')
-                    ];
-                    
-                    file_put_contents($catalogFile, json_encode($items, JSON_PRETTY_PRINT));
-                    $message = 'Item added successfully!';
                 } else {
-                    $message = 'Error uploading file.';
+                    $message = "Error uploading image.";
                 }
             } else {
-                $message = 'Invalid file type. Allowed: jpg, jpeg, png, gif, webp, avif';
+                $message = "Please list an image.";
             }
-        } else {
-            $message = 'Error uploading file.';
+        } catch (Exception $e) {
+            $message = "Error (Schema likely needs update): " . $e->getMessage();
         }
-    } else {
-        $message = 'Please fill in all fields.';
     }
-}
+
+
+    try {
+        $totalUsers = $conn->query("SELECT COUNT(*) FROM user")->fetchColumn();
+    } catch (Exception $e) { $totalUsers = 0; }
+
+    try {
+        $totalProducts = $conn->query("SELECT COUNT(*) FROM product")->fetchColumn();
+    } catch (Exception $e) { $totalProducts = 0; }
+    
+ 
+    $users = [];
+    try {
+        $usersQuery = $conn->query("SELECT id, Fullname, Email, Role, created_at FROM user ORDER BY created_at DESC");
+        if ($usersQuery) $users = $usersQuery->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+        $message = "Error fetching users: " . $e->getMessage();
+    }
+
+    $allProducts = [];
+    try {
+        $allProducts = $conn->query("SELECT * FROM product ORDER BY created_at DESC")->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+        $allProducts = [];
+    }
+
+    $editProduct = null;
+    if (isset($_GET['edit_product_id'])) {
+        $stmt = $conn->prepare("SELECT * FROM product WHERE ProductID = :id");
+        $stmt->execute(['id' => $_GET['edit_product_id']]);
+        $editProduct = $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+
+    if (isset($_POST['update_product'])) {
+        try {
+            $pID = $_POST['product_id'];
+            $title = $_POST['item_title'];
+            $description = $_POST['item_description'];
+            $quantity = (int)$_POST['item_quantity'];
+            
+            $imgSql = "";
+            $params = [
+                'title' => $title,
+                'desc' => $description,
+                'qty' => $quantity,
+                'id' => $pID
+            ];
+
+            if (isset($_FILES['item_image']) && $_FILES['item_image']['error'] == 0) {
+                $uploadDir = 'Photos/';
+                $fileName = basename($_FILES['item_image']['name']);
+                $targetPath = $uploadDir . $fileName; 
+                if (move_uploaded_file($_FILES['item_image']['tmp_name'], $targetPath)) {
+                    $imgSql = ", image_path = :img";
+                    $params['img'] = $targetPath;
+                }
+            }
+
+            $stmt = $conn->prepare("UPDATE product SET ProductName = :title, description = :desc, Quantity = :qty $imgSql WHERE ProductID = :id");
+            if ($stmt->execute($params)) {
+                $message = "Product updated successfully!";
+                header("Location: Dashboard.php?msg=updated"); // Redirect to clear POST
+                exit();
+            }
+        } catch (Exception $e) {
+            $message = "Error updating product: " . $e->getMessage();
+        }
+    }
+    
+    if (isset($_GET['msg']) && $_GET['msg'] == 'updated') {
+        $message = "Product updated successfully!";
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -65,6 +174,47 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_catalog_item'])) {
 <head>
     <title>Dashboard</title>
     <link rel="stylesheet" href="Project.css">
+    <style>
+        /* Dashboard specific overrides since logic is complex */
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #F0FFFF;
+            margin-top: 15px;
+        }
+        .user-table th, .user-table td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid rgba(81, 202, 255, 0.2);
+        }
+        .user-table th {
+            background: rgba(81, 202, 255, 0.1);
+            color: #51CAFF;
+        }
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-right: 5px;
+        }
+        .btn-kick {
+            background: #f39c12;
+            color: white;
+        }
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+        }
+        .alert-msg {
+            background: rgba(81, 202, 255, 0.2);
+            color: #51CAFF;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -96,133 +246,181 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_catalog_item'])) {
     <div class="main-content">
         <div class="dashboard-page-container">
             <div class="dashboard-page-header">
-                <h1>Dashboard</h1>
+                <h1>Admin Dashboard</h1>
             </div>
             <div class="dashboard-content">
+
+                <?php if ($message): ?>
+                    <div class="alert-msg"><?php echo htmlspecialchars($message); ?></div>
+                <?php endif; ?>
+
+                <!-- SECTION 1: OVERVIEW STATS -->
                 <div class="dashboard-section">
-                    <h2>Overview</h2>
+                    <h2>System Overview</h2>
                     <div class="stats-grid">
                         <div class="stat-box">
+                            <h3>Total Users</h3>
+                            <p class="stat-number"><?php echo $totalUsers; ?></p>
+                        </div>
+                        <div class="stat-box">
                             <h3>Total Products</h3>
-                            <p class="stat-number">24</p>
-                        </div>
-                        <div class="stat-box">
-                            <h3>Users</h3>
-                            <p class="stat-number">156</p>
-                        </div>
-                        <div class="stat-box">
-                            <h3>Orders</h3>
-                            <p class="stat-number">89</p>
+                            <p class="stat-number"><?php echo $totalProducts; ?></p>
                         </div>
                     </div>
                 </div>
                 
+                <!-- SECTION 2: USER MANAGEMENT -->
                 <div class="dashboard-section">
-                    <h2>Recent Activity</h2>
-                    <div class="activity-list">
-                        <div class="activity-item">
-                            <p>New user registered - 2 hours ago</p>
-                        </div>
-                        <div class="activity-item">
-                            <p>Order #1234 completed - 5 hours ago</p>
-                        </div>
-                        <div class="activity-item">
-                            <p>Catalog page updated - 1 day ago</p>
-                        </div>
-                        <div class="activity-item">
-                            <p>Help page viewed 45 times - 2 days ago</p>
-                        </div>
+                    <h2>User Management</h2>
+                    <div style="overflow-x: auto;">
+                        <table class="user-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($users as $u): ?>
+                                <tr>
+                                    <td><?php echo $u['id']; ?></td>
+                                    <td><?php echo htmlspecialchars($u['Fullname']); ?></td>
+                                    <td><?php echo htmlspecialchars($u['Email']); ?></td>
+                                    <td><?php echo $u['Role'] == 1 ? 'Admin' : 'User'; ?></td>
+                                    <td>
+                                        <?php if ($u['Role'] != 1): ?>
+                                            <form method="POST" style="display:inline;" onsubmit="return confirm('Sign out (Kick) this user?');">
+                                                <input type="hidden" name="user_id" value="<?php echo $u['id']; ?>">
+                                                <button type="submit" name="kick_user" class="action-btn btn-kick">Sign Out</button>
+                                            </form>
+                                            <form method="POST" style="display:inline;" onsubmit="return confirm('Permanently delete this user?');">
+                                                <input type="hidden" name="user_id" value="<?php echo $u['id']; ?>">
+                                                <button type="submit" name="delete_user" class="action-btn btn-delete">Delete</button>
+                                            </form>
+                                        <?php else: ?>
+                                            <span style="color:#aaa;">(Admin)</span>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                
+
+                <!-- SECTION 3: PRODUCT MANAGEMENT -->
                 <div class="dashboard-section">
-                    <h2>Quick Links</h2>
-                    <div class="component-stats">
-                        <div class="component-item">
-                            <strong><a href="Catalog.php" style="color: #F0FFFF; text-decoration: none;">View Catalog</a></strong>
-                        </div>
-                        <div class="component-item">
-                            <strong><a href="Analytics.php" style="color: #F0FFFF; text-decoration: none;">View Analytics</a></strong>
-                        </div>
-                        <div class="component-item">
-                            <strong><a href="Help.php" style="color: #F0FFFF; text-decoration: none;">Help Center</a></strong>
-                        </div>
-                        <div class="component-item">
-                            <strong><a href="AboutUs.php" style="color: #F0FFFF; text-decoration: none;">About Us</a></strong>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="dashboard-section">
-                    <h2>Add Catalog Item</h2>
-                    <?php if (!empty($message)): ?>
-                        <p style="color: #51CAFF; padding: 10px; background: rgba(81, 202, 255, 0.1); border-radius: 6px; margin-bottom: 15px;">
-                            <?php echo htmlspecialchars($message); ?>
-                        </p>
-                    <?php endif; ?>
+                    <h2><?php echo $editProduct ? 'Edit Product' : 'Add Catalog Product'; ?></h2>
                     <form method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 15px;">
+                        <?php if ($editProduct): ?>
+                            <input type="hidden" name="product_id" value="<?php echo $editProduct['ProductID']; ?>">
+                        <?php endif; ?>
                         <div>
-                            <label style="color: #F0FFFF; display: block; margin-bottom: 5px;">Item Title:</label>
+                            <label style="color: #F0FFFF; display: block; margin-bottom: 5px;">Product Name:</label>
                             <input type="text" name="item_title" required 
                                    style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid rgba(81, 202, 255, 0.3); 
-                                          background: rgba(30, 30, 30, 0.6); color: #f4f8fa; font-family: 'Times New Roman', Times, serif;"
-                                   placeholder="Enter item title">
+                                          background: rgba(30, 30, 30, 0.6); color: #f4f8fa;"
+                                   placeholder="Enter product name" 
+                                   value="<?php echo $editProduct ? htmlspecialchars($editProduct['ProductName']) : ''; ?>">
                         </div>
                         <div>
                             <label style="color: #F0FFFF; display: block; margin-bottom: 5px;">Description:</label>
                             <textarea name="item_description" required rows="4"
                                       style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid rgba(81, 202, 255, 0.3); 
-                                             background: rgba(30, 30, 30, 0.6); color: #f4f8fa; font-family: 'Times New Roman', Times, serif;"
-                                      placeholder="Enter item description"></textarea>
+                                             background: rgba(30, 30, 30, 0.6); color: #f4f8fa;"
+                                      placeholder="Enter item description"><?php echo $editProduct ? htmlspecialchars($editProduct['description']) : ''; ?></textarea>
+                        </div>
+                        <div style="display: flex; gap: 20px;">
+                            <div style="flex:1;">
+                                <label style="color: #F0FFFF; display: block; margin-bottom: 5px;">Quantity:</label>
+                                <input type="number" name="item_quantity" value="<?php echo $editProduct ? $editProduct['Quantity'] : '1'; ?>" min="0" required 
+                                       style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid rgba(81, 202, 255, 0.3); 
+                                              background: rgba(30, 30, 30, 0.6); color: #f4f8fa;">
+                            </div>
                         </div>
                         <div>
-                            <label style="color: #F0FFFF; display: block; margin-bottom: 5px;">Image:</label>
-                            <input type="file" name="item_image" accept="image/*" required
+                            <label style="color: #F0FFFF; display: block; margin-bottom: 5px;">Image: <?php echo $editProduct ? '(Leave blank to keep current)' : ''; ?></label>
+                            <input type="file" name="item_image" accept="image/*" <?php echo $editProduct ? '' : 'required'; ?>
                                    style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid rgba(81, 202, 255, 0.3); 
-                                          background: rgba(30, 30, 30, 0.6); color: #f4f8fa; font-family: 'Times New Roman', Times, serif;">
+                                          background: rgba(30, 30, 30, 0.6); color: #f4f8fa;">
                         </div>
-                        <button type="submit" name="add_catalog_item" 
-                                style="padding: 10px 20px; background: rgba(81, 202, 255, 0.3); color: #F0FFFF; 
-                                       border: 1px solid rgba(81, 202, 255, 0.5); border-radius: 6px; cursor: pointer; 
-                                       font-family: 'Times New Roman', Times, serif; font-weight: bold; font-size: 1rem;
-                                       transition: background 0.2s;"
-                                onmouseover="this.style.background='rgba(81, 202, 255, 0.5)'"
-                                onmouseout="this.style.background='rgba(81, 202, 255, 0.3)'">
-                            Add to Catalog
-                        </button>
+                        <div style="display: flex; gap: 10px;">
+                            <button type="submit" name="<?php echo $editProduct ? 'update_product' : 'add_product'; ?>" 
+                                    style="padding: 10px 20px; background: rgba(81, 202, 255, 0.3); color: #F0FFFF; 
+                                           border: 1px solid rgba(81, 202, 255, 0.5); border-radius: 6px; cursor: pointer; 
+                                           font-weight: bold; transition: background 0.2s;">
+                                <?php echo $editProduct ? 'Update Product' : 'Add to Catalog'; ?>
+                            </button>
+                            <?php if ($editProduct): ?>
+                                <a href="Dashboard.php" style="padding: 10px 20px; background: rgba(255,255,255,0.1); color: #eee; 
+                                           border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; cursor: pointer; 
+                                           text-decoration: none; font-weight: bold; display: flex; align-items: center;">
+                                    Cancel
+                                </a>
+                            <?php endif; ?>
+                        </div>
                     </form>
                 </div>
-                
+
+                <!-- SECTION 4: MANAGE PRODUCTS -->
                 <div class="dashboard-section">
-                    <h2 style="color: #FFFFFF !important; font-weight: bold;">System Status</h2>
-                    <p style="color: #FFFFFF !important;">Everything is running normally. All systems operational.</p>
-                    <p style="color: #FFFFFF !important;">Last updated: <strong style="color: #51CAFF !important;"><?php echo date('Y-m-d H:i:s'); ?></strong></p>
+                    <h2>Manage Products</h2>
+                    <div style="overflow-x: auto;">
+                        <table class="user-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Product</th>
+                                    <th>Qty</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($allProducts as $p): ?>
+                                <tr>
+                                    <td><?php echo $p['ProductID']; ?></td>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <img src="<?php echo htmlspecialchars($p['image_path']); ?>" style="width: 40px; height: 40px; border-radius: 4px; object-fit: cover;">
+                                            <span><?php echo htmlspecialchars($p['ProductName']); ?></span>
+                                        </div>
+                                    </td>
+                                    <td><?php echo $p['Quantity']; ?></td>
+                                    <td>
+                                        <a href="?edit_product_id=<?php echo $p['ProductID']; ?>" class="action-btn" style="background:#3498db; color:white; text-decoration:none;">Edit</a>
+                                        <form method="POST" style="display:inline;" onsubmit="return confirm('Immediately delete this product?');">
+                                            <input type="hidden" name="product_id" value="<?php echo $p['ProductID']; ?>">
+                                            <button type="submit" name="delete_product" class="action-btn btn-delete">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
     <script>
         const dropdown = document.getElementById('navbarDropdown');
         const dropdownBtn = dropdown.querySelector('.dropdown-toggle');
         const dropdownMenu = dropdown.querySelector('.dropdown-menu');
-        let dropdownOpen = false;
-
+        
         dropdownBtn.addEventListener('click', function(e) {
             e.stopPropagation();
-            dropdownOpen = !dropdownOpen;
-            dropdown.classList.toggle('open', dropdownOpen);
+            dropdown.classList.toggle('open'); // Corrected for Project.css
         });
-
-        document.addEventListener('click', function() {
-            if (dropdownOpen) {
-                dropdownOpen = false;
-                dropdown.classList.remove('open');
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropdown-toggle') && !event.target.closest('.dropdown-menu')) {
+                if (dropdown.classList.contains('open')) {
+                    dropdown.classList.remove('open');
+                }
             }
-        });
-        dropdownMenu.addEventListener('click', function(e) {
-            e.stopPropagation();
-        });
+        }
     </script>
 </body>
 </html>

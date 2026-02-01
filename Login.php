@@ -103,15 +103,16 @@
     document.addEventListener('DOMContentLoaded', function() {
         var dropdown = document.getElementById('navbarDropdown');
         var button = document.getElementById('dropdownMenuButton');
+        
+        button.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdown.classList.toggle('open');
+        });
+
         document.addEventListener('click', function(e) {
-            if (button && button.contains(e.target)) {
-                dropdown.classList.toggle('open');
-            } else if (!dropdown.contains(e.target)) {
+            if (!dropdown.contains(e.target)) {
                 dropdown.classList.remove('open');
             }
-        });
-        window.addEventListener('resize', function() {
-            dropdown.classList.remove('open');
         });
 
         var borderDiv = document.getElementById('signupContainerOuter');

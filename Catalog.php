@@ -1,12 +1,44 @@
 <?php
     session_start();
+    include_once 'Database.php';
+
     if (!isset($_SESSION['user_id'])) {
         header("Location: Login.php");
         exit();
     }
+    
+    // Auth & Force Logout Check
+    $db = new Database();
+    $conn = $db->getConnection();
+    
+    try {
+        $stmt = $conn->prepare("SELECT force_logout FROM user WHERE id = :id");
+        $stmt->bindParam(':id', $_SESSION['user_id']);
+        $stmt->execute();
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user && $user['force_logout'] == 1) {
+            session_destroy();
+            header("Location: Login.php?msg=kicked");
+            exit();
+        }
+    } catch (PDOException $e) {
+        // Column 'force_logout' likely doesn't exist yet. 
+        // Ignore error to allow page to load, but feature won't work.
+    }
+
     if (!isset($_SERVER['HTTP_REFERER']) || stripos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) === false) {
         header("Location: Homepage.php");
         exit();
+    }
+
+    // Fetch Products
+    // Using 'product' table now (ProductID, ProductName, Quantity, Nr, description, image_path)
+    try {
+        $productsQuery = $conn->query("SELECT * FROM product ORDER BY created_at ASC");
+        $products = $productsQuery ? $productsQuery->fetchAll(PDO::FETCH_ASSOC) : [];
+    } catch (PDOException $e) {
+        $products = [];
     }
 ?>
 
@@ -45,38 +77,41 @@
         </div>
     </nav>
     <div class="main-content">
-        <div class="Box-row">
+        <div class="Box-row" style="flex-wrap: wrap; justify-content: center;">
+            <?php 
+            if (count($products) > 0) {
+                foreach ($products as $product): 
+                    // Map new column names to UI
+                    $pID = $product['ProductID'];
+                    $pName = $product['ProductName'];
+                    $pDesc = $product['description'] ?? 'No description available.';
+                    $pImg = $product['image_path'] ?? '';
+                    
+                    // Use ID Box1, Box2 etc for legacy cycling support if IDs match
+                    $boxId = "Box" . $pID; 
+            ?>
             <div class="Box-wrapper">
-                <div class="Box" id="Box1" title="GPU"></div>
+                <!-- Apply background inline for dynamic images -->
+                <div class="Box" id="<?php echo $boxId; ?>" title="<?php echo htmlspecialchars($pName); ?>"
+                     style="background-image: url('<?php echo htmlspecialchars($pImg); ?>'); background-size: cover; background-position: center;">
+                </div>
                 <div class="info-box">
                     <p class="box-description">
-                        <strong>GPU</strong> &mdash;The GPU is dedicated to rendering images, video, and animations. By handling visual workloads separately from the CPU, 
-                        it delivers smoother graphics performance and faster rendering.High‑end GPUs are essential for gaming, video editing, and other demanding applications where speed and clarity matter.
+                        <strong><?php echo htmlspecialchars($pName); ?></strong> &mdash; 
+                        <?php echo htmlspecialchars($pDesc); ?>
                     </p>
                 </div>
             </div>
-            <div class="Box-wrapper">
-                <div class="Box" id="Box2" title="CPU"></div>
-                <div class="info-box">
-                    <p class="box-description">
-                        <strong>CPU</strong> &mdash;Often called the “brain” of the computer, the CPU executes instructions and manages system operations. 
-                        Modern processors feature multiple cores and advanced multithreading, allowing them to handle complex tasks efficiently. 
-                        A powerful CPU ensures responsive performance across everyday computing and professional workloads.
-                    </p>
-                </div>
-            </div>
-            <div class="Box-wrapper">
-                <div class="Box" id="Box3" title="RAM"></div>
-                <div class="info-box">
-                    <p class="box-description">
-                        <strong>RAM</strong> &mdash;RAM provides fast, temporary storage for data that the CPU is actively using. 
-                        More RAM allows a system to multitask smoothly, keeping applications responsive without slowing down. 
-                        While it works closely with the CPU, RAM capacity and speed are critical for overall system performance.
-                        Such aspects are improved upon by the DDR5 version.
-                    </p>
-                </div>
-            </div>
+            <?php endforeach; 
+            } else {
+                echo "<div style='color:white; text-align:center; width:100%; margin-top:20px;'>
+                        <p>No products found.</p>
+                        <p style='font-size:0.9em; color:#aaa;'>Please run <strong>update_schema.php</strong> to sync the database.</p>
+                      </div>";
+            }
+            ?>
         </div>
+        
         <div class="more-coming-soon-container">
             <div class="more-coming-soon" id="moreComingSoon">MORE COMING SOON</div>
         </div>
@@ -119,22 +154,24 @@
             });
         });
 
+        // Legacy Cycling Logic for Box1, Box2, Box3
         const box1 = document.getElementById('Box1');
         const box2 = document.getElementById('Box2');
         const box3 = document.getElementById('Box3');
 
+        // Only setup cycling if elements exist
         const box1Images = [
-            'Photos/1678052-radeon-gpu-background-1920x1080_3_cropped-rotated.jpg', // Default
+            'Photos/1678052-radeon-gpu-background-1920x1080_3_cropped-rotated.jpg', 
             'Photos/HD-wallpaper-amd-radeon-graphic.jpg',
             'Photos/AMD-GPU-history.webp'
         ];
         const box2Images = [
-            'Photos/2613900-amd-ryzen-9000-desktop-og.avif', // Default
+            'Photos/2613900-amd-ryzen-9000-desktop-og.avif', 
             'Photos/Arctic-MX7-Options.jpg',
             'Photos/Asus_Motherboard.jpg'
         ];
         const box3Images = [
-            'Photos/DDR5-RAM-and-Ryzen-Buyer-Beware-Twitter-1200x675.jpg', // Default
+            'Photos/DDR5-RAM-and-Ryzen-Buyer-Beware-Twitter-1200x675.jpg', 
             'Photos/Asus_Motherboard.jpg',
             'Photos/AMD-GPU-history.webp'
         ];
@@ -146,57 +183,56 @@
 
             if(!boxElement) return;
 
-            
+            const originalBg = boxElement.style.backgroundImage;
+
             boxElement.addEventListener('mouseenter', () => {
-
                 timeoutId = setTimeout(() => {
-
                     currentIndex = 1; 
-                    
                     intervalId = setInterval(() => {
                         const nextImage = images[currentIndex];
-
-                        
-                        boxElement.style.background = `url('${nextImage}') center center/cover no-repeat, rgba(30, 30, 30, 0.78)`;
-                        
+                        boxElement.style.backgroundImage = `url('${nextImage}')`;
                         currentIndex = (currentIndex + 1) % images.length;
                     }, 1500); 
-
                 }, 2000);
             });
 
             boxElement.addEventListener('mouseleave', () => {
                 if(timeoutId) clearTimeout(timeoutId);
                 if(intervalId) clearInterval(intervalId);
-                // Reset to default (remove inline style so CSS takes over)
-                boxElement.style.background = ''; 
+                // Reset to default
+                boxElement.style.backgroundImage = originalBg; 
             });
         }
 
-        setupCycling(box1, box1Images);
-        setupCycling(box2, box2Images);
-        setupCycling(box3, box3Images);
+        if(box1) setupCycling(box1, box1Images);
+        if(box2) setupCycling(box2, box2Images);
+        if(box3) setupCycling(box3, box3Images);
         // ---------------------------
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdown = document.getElementById('navbarDropdown');
+            if (dropdown) {
+                const dropdownBtn = dropdown.querySelector('.dropdown-toggle');
+                const dropdownMenu = dropdown.querySelector('.dropdown-menu');
 
-        const dropdown = document.getElementById('navbarDropdown');
-        const dropdownBtn = dropdown.querySelector('.dropdown-toggle');
-        const dropdownMenu = dropdown.querySelector('.dropdown-menu');
-        let dropdownOpen = false;
+                if (dropdownBtn) {
+                    dropdownBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        dropdown.classList.toggle('open');
+                    });
+                }
 
-        dropdownBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            dropdownOpen = !dropdownOpen;
-            dropdown.classList.toggle('open', dropdownOpen);
-        });
+                document.addEventListener('click', function(e) {
+                    if (!dropdown.contains(e.target)) {
+                        dropdown.classList.remove('open');
+                    }
+                });
 
-        document.addEventListener('click', function() {
-            if (dropdownOpen) {
-                dropdownOpen = false;
-                dropdown.classList.remove('open');
+                if (dropdownMenu) {
+                    dropdownMenu.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                    });
+                }
             }
-        });
-        dropdownMenu.addEventListener('click', function(e) {
-            e.stopPropagation();
         });
     </script>
     

@@ -102,20 +102,18 @@
         const dropdown = document.getElementById('navbarDropdown');
         const dropdownBtn = dropdown.querySelector('.dropdown-toggle');
         const dropdownMenu = dropdown.querySelector('.dropdown-menu');
-        let dropdownOpen = false;
 
         dropdownBtn.addEventListener('click', function(e) {
             e.stopPropagation();
-            dropdownOpen = !dropdownOpen;
-            dropdown.classList.toggle('open', dropdownOpen);
+            dropdown.classList.toggle('open');
         });
 
-        document.addEventListener('click', function() {
-            if (dropdownOpen) {
-                dropdownOpen = false;
+        document.addEventListener('click', function(e) {
+            if (!dropdown.contains(e.target)) {
                 dropdown.classList.remove('open');
             }
         });
+
         dropdownMenu.addEventListener('click', function(e) {
             e.stopPropagation();
         });
