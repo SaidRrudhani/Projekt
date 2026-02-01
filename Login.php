@@ -71,7 +71,10 @@
             </form>
             <div class="output" id="output"></div>
             <div class="login-link-container">
-                No account? | <a href="Sign up page.php" id="signup-link">Sign Up</a>
+                                No account? | <a href="Sign up page.php" id="signup-link">Sign Up</a>
+            </div>
+            <div class="login-link-container" style="margin-top: 10px;">
+                <a href="Homepage.php" style="color: #51CAFF; text-decoration: none; font-size: 0.9em;">&larr; Back to Home</a>
             </div>
         </div>
       </div>

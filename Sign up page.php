@@ -82,6 +82,9 @@
         <div class="login-link-container">
         Already signed up? | <a href="Login.php" id="login-link">Login</a>
             </div>
+            <div class="login-link-container" style="margin-top: 10px;">
+                <a href="Homepage.php" style="color: #51CAFF; text-decoration: none; font-size: 0.9em;">&larr; Back to Home</a>
+            </div>
         </div>
       </div>
     </div>
