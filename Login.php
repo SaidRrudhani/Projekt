@@ -2,6 +2,12 @@
     session_start();
     include_once 'Database.php';
     include_once 'User.php';
+    
+    if (isset($_SESSION['user_id'])) {
+        echo '<script>alert("You are already signed in"); window.location.href="Homepage.php";</script>';
+        exit();
+    }
+
 
     if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email']) && isset($_POST['password'])) {
         $db = new Database();
@@ -152,7 +158,6 @@
             out.innerHTML = "";
             out.style.display = "none";
 
-            // Allow form submission
             e.target.submit();
             return true;
         }

@@ -4,6 +4,10 @@
         header("Location: Catalog.php"); // Or Homepage.php
         exit();
     }
+    if (!isset($_SERVER['HTTP_REFERER']) || stripos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) === false) {
+        header("Location: Homepage.php");
+        exit();
+    }
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_catalog_item'])) {
     $title = $_POST['item_title'] ?? '';
     $description = $_POST['item_description'] ?? '';

@@ -4,6 +4,10 @@
         header("Location: Login.php");
         exit();
     }
+    if (!isset($_SERVER['HTTP_REFERER']) || stripos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) === false) {
+        header("Location: Homepage.php");
+        exit();
+    }
 ?>
 
 
