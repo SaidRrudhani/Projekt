@@ -26,9 +26,7 @@
     $productModel = new Product($conn);
     $message = '';
 
-    // --- ACTIONS ---
 
-    // Delete User
     if (isset($_POST['delete_user'])) {
         if ($userModel->deleteUser($_POST['user_id'])) {
             $message = "User deleted successfully.";
@@ -37,7 +35,7 @@
         }
     }
 
-    // Kick User (Force Logout)
+
     if (isset($_POST['kick_user'])) {
         if ($userModel->kickUser($_POST['user_id'])) {
             $message = "User has been signed out (will take effect on their next page load).";
@@ -46,7 +44,7 @@
         }
     }
 
-    // Delete Product
+
     if (isset($_POST['delete_product'])) {
         if ($productModel->delete($_POST['product_id'])) {
             $message = "Product deleted successfully.";
@@ -55,7 +53,7 @@
         }
     }
 
-    // Add Product
+    
     if (isset($_POST['add_product'])) {
         try {
             $title = $_POST['item_title'];
@@ -85,23 +83,23 @@
     }
 
 
-    // Stats
+
     $totalUsers = $conn->query("SELECT COUNT(*) FROM user")->fetchColumn();
     $totalProducts = $productModel->getCount();
     
-    // Users List
+
     $users = $userModel->getAllUsers();
 
-    // Products List for Management
+
     $allProducts = $productModel->getAll();
 
-    // Edit Product Handling
+
     $editProduct = null;
     if (isset($_GET['edit_product_id'])) {
         $editProduct = $productModel->getById($_GET['edit_product_id']);
     }
 
-    // Update Product Logic
+
     if (isset($_POST['update_product'])) {
         try {
             $targetPath = null;
@@ -134,47 +132,7 @@
 <head>
     <title>Dashboard</title>
     <link rel="stylesheet" href="Project.css">
-    <style>
-        /* Dashboard specific overrides since logic is complex */
-        .user-table {
-            width: 100%;
-            border-collapse: collapse;
-            color: #F0FFFF;
-            margin-top: 15px;
-        }
-        .user-table th, .user-table td {
-            text-align: left;
-            padding: 12px;
-            border-bottom: 1px solid rgba(81, 202, 255, 0.2);
-        }
-        .user-table th {
-            background: rgba(81, 202, 255, 0.1);
-            color: #51CAFF;
-        }
-        .action-btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9em;
-            margin-right: 5px;
-        }
-        .btn-kick {
-            background: #f39c12;
-            color: white;
-        }
-        .btn-delete {
-            background: #e74c3c;
-            color: white;
-        }
-        .alert-msg {
-            background: rgba(81, 202, 255, 0.2);
-            color: #51CAFF;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="Dashboard.css">
 </head>
 <body>
     <nav class="navbar">
@@ -271,7 +229,6 @@
                     </div>
                 </div>
 
-                <!-- SECTION 3: PRODUCT MANAGEMENT -->
                 <div class="dashboard-section">
                     <h2><?php echo $editProduct ? 'Edit Product' : 'Add Catalog Product'; ?></h2>
                     <form method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 15px;">
@@ -325,7 +282,6 @@
                     </form>
                 </div>
 
-                <!-- SECTION 4: MANAGE PRODUCTS -->
                 <div class="dashboard-section">
                     <h2>Manage Products</h2>
                     <div style="overflow-x: auto;">

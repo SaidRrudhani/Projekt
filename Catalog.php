@@ -143,12 +143,10 @@
             });
         });
 
-        // Legacy Cycling Logic for Box1, Box2, Box3
         const box1 = document.getElementById('Box1');
         const box2 = document.getElementById('Box2');
         const box3 = document.getElementById('Box3');
 
-        // Only setup cycling if elements exist
         const box1Images = [
             'Photos/1678052-radeon-gpu-background-1920x1080_3_cropped-rotated.jpg', 
             'Photos/HD-wallpaper-amd-radeon-graphic.jpg',
@@ -196,7 +194,7 @@
         if(box1) setupCycling(box1, box1Images);
         if(box2) setupCycling(box2, box2Images);
         if(box3) setupCycling(box3, box3Images);
-        // ---------------------------
+ 
         document.addEventListener('DOMContentLoaded', function() {
             const dropdown = document.getElementById('navbarDropdown');
             if (dropdown) {
