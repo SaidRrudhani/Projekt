@@ -18,6 +18,14 @@
         $Password = $_POST['password'];
 
         if($user->login($Email, $Password)){
+            // Remember Me Logic
+            if (isset($_POST['remember_me'])) {
+                setcookie('remember_email', $Email, time() + (86400 * 30), "/"); // 30 days
+            } else {
+                if (isset($_COOKIE['remember_email'])) {
+                    setcookie('remember_email', '', time() - 3600, "/");
+                }
+            }
             header("Location: Catalog.php");
             exit();
         } else {
@@ -68,11 +76,17 @@
             <h2>Login</h2>
             <form id="loginForm" method="POST" autocomplete="off" novalidate>
                 <label>Email:</label><br>
-                <input type="email" id="email" name="email" required />
+                <input type="email" id="email" name="email" value="<?php echo isset($_COOKIE['remember_email']) ? htmlspecialchars($_COOKIE['remember_email']) : ''; ?>" required />
                 <div class="error-msg" id="email-error"></div>
                 <label>Password:</label><br>
                 <input type="password" id="password" name="password" required />
                 <div class="error-msg" id="password-error"></div>
+                
+                <div style="margin-bottom: 15px; text-align: left; width: 320px; max-width: 100%;">
+                    <input type="checkbox" id="remember_me" name="remember_me" style="width: auto; display: inline-block; margin: 0 10px 0 0;">
+                    <label for="remember_me" style="display: inline; color: #272750; font-weight: normal;">Remember Me</label>
+                </div>
+
                 <button type="submit">Login</button>
             </form>
             <div class="output" id="output"></div>

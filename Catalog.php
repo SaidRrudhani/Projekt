@@ -119,6 +119,65 @@
             });
         });
 
+        const box1 = document.getElementById('Box1');
+        const box2 = document.getElementById('Box2');
+        const box3 = document.getElementById('Box3');
+
+        const box1Images = [
+            'Photos/1678052-radeon-gpu-background-1920x1080_3_cropped-rotated.jpg', // Default
+            'Photos/HD-wallpaper-amd-radeon-graphic.jpg',
+            'Photos/AMD-GPU-history.webp'
+        ];
+        const box2Images = [
+            'Photos/2613900-amd-ryzen-9000-desktop-og.avif', // Default
+            'Photos/Arctic-MX7-Options.jpg',
+            'Photos/Asus_Motherboard.jpg'
+        ];
+        const box3Images = [
+            'Photos/DDR5-RAM-and-Ryzen-Buyer-Beware-Twitter-1200x675.jpg', // Default
+            'Photos/Asus_Motherboard.jpg',
+            'Photos/AMD-GPU-history.webp'
+        ];
+
+        function setupCycling(boxElement, images) {
+            let timeoutId;
+            let intervalId;
+            let currentIndex = 0;
+
+            if(!boxElement) return;
+
+            
+            boxElement.addEventListener('mouseenter', () => {
+
+                timeoutId = setTimeout(() => {
+
+                    currentIndex = 1; 
+                    
+                    intervalId = setInterval(() => {
+                        const nextImage = images[currentIndex];
+
+                        
+                        boxElement.style.background = `url('${nextImage}') center center/cover no-repeat, rgba(30, 30, 30, 0.78)`;
+                        
+                        currentIndex = (currentIndex + 1) % images.length;
+                    }, 1500); 
+
+                }, 2000);
+            });
+
+            boxElement.addEventListener('mouseleave', () => {
+                if(timeoutId) clearTimeout(timeoutId);
+                if(intervalId) clearInterval(intervalId);
+                // Reset to default (remove inline style so CSS takes over)
+                boxElement.style.background = ''; 
+            });
+        }
+
+        setupCycling(box1, box1Images);
+        setupCycling(box2, box2Images);
+        setupCycling(box3, box3Images);
+        // ---------------------------
+
         const dropdown = document.getElementById('navbarDropdown');
         const dropdownBtn = dropdown.querySelector('.dropdown-toggle');
         const dropdownMenu = dropdown.querySelector('.dropdown-menu');

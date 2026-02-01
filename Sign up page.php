@@ -20,6 +20,10 @@
 
 
         if($user->register($Fullname, $Email, $Password)){
+            // Remember Me Logic (Save email for login)
+            if (isset($_POST['remember_me'])) {
+                setcookie('remember_email', $Email, time() + (86400 * 30), "/");
+            }
             header("Location: Login.php");
             exit();
         } else {
@@ -72,7 +76,7 @@
             <form id="signupForm" method="POST" autocomplete="off" novalidate>
 
                 <label>Email:</label><br>
-                <input type="email" id="email" name="email" required />
+                <input type="email" id="email" name="email" value="<?php echo isset($_COOKIE['remember_email']) ? htmlspecialchars($_COOKIE['remember_email']) : ''; ?>" required />
                 <div class="error-msg" id="email-error"></div>
 
                 <label>Password:</label><br>
@@ -82,6 +86,12 @@
                 <label>Fullname:</label><br>
                 <input type="text" id="name" name="name" required />
                 <div class="error-msg" id="name-error"></div>
+                
+                <div style="margin-bottom: 15px; text-align: left; width: 320px; max-width: 100%;">
+                    <input type="checkbox" id="remember_me" name="remember_me" style="width: auto; display: inline-block; margin: 0 10px 0 0;">
+                    <label for="remember_me" style="display: inline; color: #272750; font-weight: normal; font-family: 'Times New Roman', Times, serif;">Remember Me</label>
+                </div>
+                
                 <button type="submit">Sign Up</button>
             </form>
     <div class="output" id="output"></div>
