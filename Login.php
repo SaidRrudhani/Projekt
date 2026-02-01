@@ -83,7 +83,6 @@
     document.addEventListener('DOMContentLoaded', function() {
         var dropdown = document.getElementById('navbarDropdown');
         var button = document.getElementById('dropdownMenuButton');
-        // Handle dropdown open/close using .open class (matches CSS)
         document.addEventListener('click', function(e) {
             if (button && button.contains(e.target)) {
                 dropdown.classList.toggle('open');
