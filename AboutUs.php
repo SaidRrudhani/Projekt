@@ -1,5 +1,9 @@
 <?php
     session_start();
+    header("Cache-Control: no-cache, no-store, must-revalidate");
+    header("Pragma: no-cache");
+    header("Expires: 0");
+
     include_once 'Database.php';
     include_once 'User.php';
     
@@ -133,6 +137,19 @@
         dropdownMenu.addEventListener('click', function(e) {
             e.stopPropagation();
         });
+
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
+
+        (function() {
+            history.pushState(null, null, location.href);
+            window.addEventListener('popstate', function() {
+                window.location.href = 'Homepage.php';
+            });
+        })();
     </script>
     
 </body>
