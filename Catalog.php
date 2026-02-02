@@ -185,7 +185,6 @@
             boxElement.addEventListener('mouseleave', () => {
                 if(timeoutId) clearTimeout(timeoutId);
                 if(intervalId) clearInterval(intervalId);
-                // Reset to default
                 boxElement.style.backgroundImage = originalBg; 
             });
         }

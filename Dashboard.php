@@ -176,7 +176,6 @@
                     <div class="alert-msg"><?php echo htmlspecialchars($message); ?></div>
                 <?php endif; ?>
 
-                <!-- SECTION 1: OVERVIEW STATS -->
                 <div class="dashboard-section">
                     <h2>System Overview</h2>
                     <div class="stats-grid">
@@ -191,7 +190,6 @@
                     </div>
                 </div>
                 
-                <!-- SECTION 2: USER MANAGEMENT -->
                 <div class="dashboard-section">
                     <h2>User Management</h2>
                     <div style="overflow-x: auto;">
