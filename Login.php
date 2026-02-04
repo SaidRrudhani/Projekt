@@ -20,7 +20,7 @@
 
         $login_result = $user->login($Email, $Password);
         if($login_result === true){
-            // Remember Me Logic
+
             if (isset($_POST['remember_me'])) {
                 setcookie('remember_email', $Email, time() + (86400 * 30), "/"); 
             } else {
