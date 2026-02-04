@@ -2,7 +2,7 @@
     session_start();
     include_once 'Database.php';
     include_once 'User.php';
-    
+     
     if (isset($_SESSION['user_id'])) {
         echo '<script>alert("You are already signed in"); window.location.href="Homepage.php";</script>';
         exit();
